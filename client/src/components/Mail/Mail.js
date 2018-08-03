@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { List, Segment } from 'semantic-ui-react';
 import axios from 'axios';
 import Loader from '../Loader/Loader'
-import MailThreads from '../MailThreads/MailThreads'
+import SingleMail from '../SingleMail/SingleMail'
 
 export default class Mail extends Component {
   
@@ -10,7 +10,7 @@ export default class Mail extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      threads: []
+      mails: []
     }
   }
   getData() {
@@ -26,13 +26,13 @@ export default class Mail extends Component {
 
   componentDidMount () {
     this.getData()
-      .then(threads => {
-        this.setState({ threads, isLoading: false });
+      .then(mails => {
+        this.setState({ mails, isLoading: false });
       })
   }
 
   render() {
-    const { threads } = this.state;
+    const { mails } = this.state;
     return (
       <Fragment>
         <div className='column__header'>
@@ -41,10 +41,10 @@ export default class Mail extends Component {
         <Segment color='orange'>
           <Loader isLoading={this.state.isLoading} />
           <List divided relaxed>
-          {threads.map((thread, index) => {
+          {mails.map((mail, index) => {
             return (
-              <MailThreads 
-                data={thread}
+              <SingleMail 
+                data={mail}
                 key={index}
               />
             )

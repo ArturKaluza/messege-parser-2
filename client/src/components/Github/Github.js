@@ -31,7 +31,6 @@ class Github extends Component {
   fetchCommits() {
     axios.get('https://api.github.com/repos/ArturKaluza/alm/commits')
       .then(response => {
-        console.log(response.data)
         const arr = response.data.map(commit => {
           const date = {}
           date.avatarUrl = commit.author.avatar_url

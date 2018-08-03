@@ -4,8 +4,8 @@ const { getAllThemes } = require('../mailServices');
 
 router.get('/', (req, res) => {
   return getAllThemes()
-    .then(themes => {
-      res.send(themes)
+    .then(data => {
+      res.status(200).send(data)
     })
 });
 
