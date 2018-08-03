@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 
 const bitbucket = require('./api/bitbucket/bitbucket');
 const jira = require('./api/jira/jira');
+const mail = require('./api/mail/mail');
+
 
 
 // middleware
@@ -18,5 +20,6 @@ app.get('/', (req, res) => {
 
 app.use('/api/bitbucket/', bitbucket);
 app.use('/api/jira', jira);
+app.use('/api/mail', mail)
 
 app.listen(5000, () => console.log('server running...port: 5000'))
