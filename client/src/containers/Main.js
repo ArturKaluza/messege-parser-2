@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './Main.css';
-import { Grid } from 'semantic-ui-react'
+import { Grid, Divider } from 'semantic-ui-react'
 
 import Slack from '../components/Slack/Slack';
 import Github from '../components/Github/Github';
 import BitBucket from '../components/BitBucket/BitBucket';
 import Jira from '../components/Jira/Jira';
+import Mail from '../components/Mail/Mail';
+
 
 class Main extends Component {
   constructor() {
@@ -30,7 +32,6 @@ class Main extends Component {
          <div className='title'>
             <h1>Message-Parse-App </h1>
         </div>
-         
          <Grid columns={4} divided >
           <Grid.Row>
             
@@ -50,6 +51,12 @@ class Main extends Component {
               <BitBucket  handleActiveTask={this.state.activeTask} />
             </Grid.Column>
 
+          </Grid.Row>
+          <Divider fitted ></Divider>
+          <Grid.Row columns={4} divided>
+            <Grid.Column className="tool-container">
+              <Mail />
+            </Grid.Column>
           </Grid.Row>
         </Grid>
       
