@@ -1,0 +1,4 @@
+.slack-controler {
+  display: flex;
+  flex-direction: column;
+}

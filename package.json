@@ -1,0 +1,24 @@
+{
+  "name": "message-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:client": "cd client&& npm start",
+    "start:server": "nodemon server/server",
+    "install:server": "npm install",
+    "install:client": "cd client && npm install",
+    "install:all": "npm run install:server&& npm run install:client"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "concurrently": "^3.6.1",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "node-fetch": "^2.2.0",
+    "nodemon": "^1.18.3"
+  }
+}

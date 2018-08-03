@@ -1,0 +1,3 @@
+[submodule "message-parser"]
+	path = message-parser
+	url = git@github.com:ArturKaluza/message-parser.git

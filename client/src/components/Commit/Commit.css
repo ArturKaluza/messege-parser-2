@@ -1,0 +1,10 @@
+.Commit {
+  width: 90%;
+  margin: 10px auto;
+  border: 1px solid #000;
+  text-align: center;
+}
+
+.black {
+  color: #000;
+}

@@ -1,0 +1,20 @@
+const express = require('express');
+const router = express.Router();
+const fetch = require('node-fetch');
+
+
+router.get('/', (req, res) => {
+  fetch('https://supportdesk.almservices.pl/rest/api/2/project/', {
+    headers: {
+      "Authorization": 'Basic YXJ0dXIua2FsdXphOmFzZHp4YzEx',
+    }
+  })
+    .then(data => data.json())
+    .then(datajosn => {
+      res.send(datajosn)
+    })
+    .catch(e => console.log(e));
+  
+});
+
+module.exports = router;
