@@ -1,8 +1,8 @@
 .Jira__item {
   width: 90%;
-  height: 40px;
-  line-height: 40px;
-  font-size: 20px;
+  height: auto;
+  line-height: 32px;
+  font-size: 16px;
   margin: 10px auto;
   border: 1px solid #000;
   border-radius: 5px;
@@ -29,4 +29,8 @@
 .list__header {
   text-align: center;
   margin: 0 auto 20px;
+}
+
+.user__title {
+  text-align: center;
 }
