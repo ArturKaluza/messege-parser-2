@@ -15,7 +15,8 @@ class BitBucket extends Component {
       commits: [],
       activeTask: false,
       repoName: '',
-      isLoading: false
+      isLoading: false,
+      username: ''
     }
 
     this.fetchCommits = this.fetchCommits.bind(this);
@@ -23,6 +24,7 @@ class BitBucket extends Component {
     this.getRepository = this.getRepository.bind(this);
     this.renderRepositores = this.renderRepositores.bind(this);
     this.renderForm = this.renderForm.bind(this);
+    this.backToRepo = this.backToRepo.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -51,6 +53,7 @@ class BitBucket extends Component {
     e.preventDefault();
     const {username, password} = e.target;
     
+    sessionStorage.setItem('username', username.value);
     sessionStorage.setItem('password', password.value);
 
     axios.post(`/api/bitbucket`, {
@@ -68,19 +71,33 @@ class BitBucket extends Component {
 
   renderBitBucket() {
     return (
+    <div style={{textAlign: 'center'}}> 
       <List>
-      {this.state.commits.map((item, index) => <Commit 
-        key={index}
-        avatar="https://avatars1.githubusercontent.com/u/30526557?v=4"
-        author={item.author}
-        id={item.sha}
-        message={item.message}
-        activeTask ={this.state.activeTask}
-        taskID={item.taskID}
-        />
-      )}
-    </List>
+        {this.state.commits.map((item, index) => <Commit 
+          key={index}
+          avatar="https://avatars1.githubusercontent.com/u/30526557?v=4"
+          author={item.author}
+          id={item.sha}
+          message={item.message}
+          activeTask ={this.state.activeTask}
+          taskID={item.taskID}
+          />
+        )}
+      </List>
+      <button className='btn__back' onClick={() => this.backToRepo()}>Back</button>
+    </div>
     )
+  }
+
+  backToRepo() {
+    axios.post(`/api/bitbucket`, {
+      username: sessionStorage.getItem('username'),
+      password: sessionStorage.getItem('password')
+    })
+    .then(res => this.setState({repositores: res.data, commits: []}))
+    .catch(e => console.log(e));
+      
+    
   }
 
   renderRepositores() {
@@ -94,7 +111,7 @@ class BitBucket extends Component {
               
             </div>
           )}
-        </List>
+        </List>            
     )
   }
 

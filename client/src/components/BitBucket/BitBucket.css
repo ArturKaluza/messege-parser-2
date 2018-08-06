@@ -16,3 +16,19 @@
 .repo:hover {
   background: skyblue;
 }
+
+.btn__back {
+  width: 70%;
+  height: 35px;
+  border: 1px solid #000;
+  border-radius: 3px;
+  text-align: center;
+  line-height: 35px;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.btn__back:hover {
+  background: skyblue;
+}
