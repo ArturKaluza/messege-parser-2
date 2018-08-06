@@ -32,6 +32,7 @@ class BitBucket extends Component {
   }
 
   fetchCommits(repo) {
+    this.setState({isLoading: true});
     const password = sessionStorage.getItem('password')
 
     axios.post('/api/bitbucket/commit', {repo, password})
@@ -51,6 +52,7 @@ class BitBucket extends Component {
 
   getRepository(e) {
     e.preventDefault();
+    this.setState({isLoading: true})
     const {username, password} = e.target;
     
     sessionStorage.setItem('username', username.value);
@@ -60,7 +62,7 @@ class BitBucket extends Component {
       username: username.value,
       password: password.value,
     })
-    .then(res => this.setState({repositores: res.data}))
+    .then(res => this.setState({repositores: res.data, isLoading: false}))
     .catch(e => console.log(e));
       
   }
@@ -90,11 +92,12 @@ class BitBucket extends Component {
   }
 
   backToRepo() {
+    this.setState({isLoading: true})
     axios.post(`/api/bitbucket`, {
       username: sessionStorage.getItem('username'),
       password: sessionStorage.getItem('password')
     })
-    .then(res => this.setState({repositores: res.data, commits: []}))
+    .then(res => this.setState({repositores: res.data, commits: [], isLoading: false}))
     .catch(e => console.log(e));
       
     
@@ -136,12 +139,11 @@ class BitBucket extends Component {
         <div className='column__header'>
           <h2>BitBucket</h2>
       </div>
-      
+        <Loader isLoading={this.state.isLoading} />
         {(this.state.repositores.length > 0 && this.state.commits.length > 0) || this.state.repositores.length > 0 ? false : this.renderForm()}
 
         {this.state.commits.length > 0 ? <Segment color='blue'>
-                                          <Loader isLoading={this.state.isLoading} />
-                                          {this.renderBitBucket()}
+                                            {this.renderBitBucket()}
                                           
                                         </Segment> : false }
         
