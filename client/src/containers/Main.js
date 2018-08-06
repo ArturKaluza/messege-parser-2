@@ -68,7 +68,7 @@ class Main extends Component {
           <Divider fitted ></Divider>
           <Grid.Row columns={4} divided>
             <Grid.Column className="tool-container">
-              {/* <Mail /> */}
+              <Mail />
             </Grid.Column>
           </Grid.Row>
         </Grid>
