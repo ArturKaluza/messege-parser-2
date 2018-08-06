@@ -36,9 +36,10 @@ export default class Mail extends Component {
       <div>
         <Loader isLoading={this.state.isLoading} />
         <List divided relaxed>
-        {threads.map(thread => {
+        {threads.map((thread, index) => {
           return (
             <MailThreads 
+              key={index}
               data={thread}
             />
           )

@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bitbucket": "^1.1.0",
     "body-parser": "^1.18.3",
     "concurrently": "^3.6.1",
     "cors": "^2.8.4",
