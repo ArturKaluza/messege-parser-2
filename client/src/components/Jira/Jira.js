@@ -16,6 +16,7 @@ class Jira extends Component {
 
     this.checkActiveTask = this.checkActiveTask.bind(this);
     this.getWorklogList = this.getWorklogList.bind(this);
+    this.renderWorklog = this.renderWorklog.bind(this);
   }
   
   componentDidMount() {
@@ -55,6 +56,28 @@ class Jira extends Component {
     key.value = ''
   }
    
+  renderWorklog() {
+    return (
+      <Segment color='violet'>
+      {this.state.projects.length === 0 ? false : <h3 className='user__title' >User name: {this.state.author}</h3>}
+      <List>
+        {this.state.projects.map((item, index) => <List.Item
+          className={this.state.activeTask === (index + 1) ? 'Jira__item list-item list-item__active' : 'list-item Jira__item'}
+          key={index}
+          onClick={() => this.props.jiraTask(index + 1)}
+          > 
+            <div>
+              {item.comment}
+            </div>
+            <div>
+              <p>id: {item.id}</p>
+            </div>
+        </List.Item>
+        )}
+      </List>
+    </Segment>
+    )
+  }
 
   render() {
     return (
@@ -70,24 +93,9 @@ class Jira extends Component {
           </Form>
           
         </div>
-        <Segment color='violet'>
-          <h3 className='user__title' >User name: {this.state.author}</h3>
-          <List>
-            {this.state.projects.map((item, index) => <List.Item
-              className={this.state.activeTask === (index + 1) ? 'Jira__item list-item list-item__active' : 'list-item Jira__item'}
-              key={index}
-              onClick={() => this.props.jiraTask(index + 1)}
-              > 
-                <div>
-                  {item.comment}
-                </div>
-                <div>
-                  <p>id: {item.id}</p>
-                </div>
-            </List.Item>
-            )}
-          </List>
-        </Segment>
+        
+        {this.state.projects.length === 0 ? false : this.renderWorklog()}
+      
 
       </div>
     )
