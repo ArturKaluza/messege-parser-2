@@ -106,8 +106,8 @@ class Github extends Component {
         <h3 style={{textAlign: 'center'}}>Login</h3>
         <Form onSubmit={this.getRepository} style={{marginTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', flexDirection: 'column' }} >
           <Form.Group style={{flexDirection: 'column', textAlign: 'center'}}>
-            <Form.Input placeholder="username" name='username' />
-            <Form.Input placeholder="password" name='password' type='password'/>
+            <Form.Input required placeholder="username" name='username' />
+            <Form.Input required placeholder="password" name='password' type='password'/>
             <Form.Button content='Submit' style={{marginTop: '20px'}} />
           </Form.Group>
         </Form>
