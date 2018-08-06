@@ -17,7 +17,7 @@ router.post('/', (req, res) => {
   bitbucket.repositories
   .list({ username: username })
   .then(({ data, headers }) => res.send(data.values))
-  .catch(err => console.error(err))
+  .catch(err => res.status(404).end())
 
 
   // fetch('https://api.bitbucket.org/2.0/repositories/ArturKaluza/testRepo/commits')

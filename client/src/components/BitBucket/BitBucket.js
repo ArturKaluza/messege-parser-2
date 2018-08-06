@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Segment, List, Form } from 'semantic-ui-react';
 import './BitBucket.css';
 import Loader from '../Loader/Loader';
+import Err from '../Error/Error';
 
 import Commit from '../Commit/Commit';
 
@@ -13,10 +14,9 @@ class BitBucket extends Component {
     this.state = {
       repositores: [],
       commits: [],
-      activeTask: false,
-      repoName: '',
-      isLoading: false,
-      username: ''
+      activeTask: false,      
+      isLoading: false,      
+      err: false
     }
 
     this.fetchCommits = this.fetchCommits.bind(this);
@@ -63,10 +63,15 @@ class BitBucket extends Component {
       password: password.value,
     })
     .then(res => this.setState({repositores: res.data, isLoading: false}))
-    .catch(e => console.log(e));
+    .catch(e => {
+      this.setState({isLoading: false, err: true})
+      setTimeout(() => {
+        this.setState({err: false})
+      }, 2500);
+    });
       
   }
-
+ 
   randomNum() {
     return Math.floor(Math.random() * 3) + 1;
   }
@@ -138,7 +143,7 @@ class BitBucket extends Component {
       <div>
         <div className='column__header'>
           <h2>BitBucket</h2>
-      </div>
+        </div>
         <Loader isLoading={this.state.isLoading} />
         {(this.state.repositores.length > 0 && this.state.commits.length > 0) || this.state.repositores.length > 0 ? false : this.renderForm()}
 
@@ -149,6 +154,7 @@ class BitBucket extends Component {
         
        
         {this.state.commits.length === 0 ? this.renderRepositores() : false}
+        {this.state.err ? <Err text={'User nad password don\'t match'} /> : false}
       </div>
     )
   }
