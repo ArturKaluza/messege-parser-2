@@ -30,11 +30,13 @@ class BitBucket extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log(newProps.stateCommit);
     this.setState({activeTask: newProps.handleActiveTask, stateCommit: newProps.stateCommit})
   }
 
   fetchCommits(repo) {
+    // set repository name in <Main /> state
+    this.props.handleRepoName(repo.name);
+
     this.setState({isLoading: true});
     const password = sessionStorage.getItem('password')
 
