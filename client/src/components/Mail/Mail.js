@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { List, Segment } from 'semantic-ui-react';
+import { List, Segment, Form } from 'semantic-ui-react';
 import axios from 'axios';
 import Loader from '../Loader/Loader'
 import SingleMail from '../SingleMail/SingleMail'
@@ -10,25 +10,35 @@ export default class Mail extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      mails: []
+      mails: [],
+      email: "",
+      password: "",
+      servers: [
+        { key : 'outlook', text: 'outlook', value: 'imap-mail.outlook.com' }, 
+        { key: 'gmail', text: 'gmail', value: 'imap.gmail.com' }
+      ]
     }
-  }
-  getData() {
-    this.setState({ isLoading: true });
-    return axios.get('/api/mail')
-      .then(res => {
-        return res.data;
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }
 
   componentDidMount () {
-    this.getData()
-      .then(mails => {
-        this.setState({ mails, isLoading: false });
-      })
+    
+  }
+
+  changeValue = (e, { name, value }) =>  this.setState({ [name]: value })
+
+  handleSubmit = (e) => {
+    this.setState({ isLoading: true })
+    axios.post('/api/mail', {
+      email: this.state.email,
+      password: this.state.password,
+      host: this.state.server
+    })
+    .then(response  => {
+      this.setState({ mails: response.data, isLoading: false, email: '', server: '', password: '' });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   render() {
@@ -37,6 +47,14 @@ export default class Mail extends Component {
       <Fragment>
         <div className='column__header'>
           <h2>E-mail</h2>
+          <Form onSubmit={this.handleSubmit} style={{marginTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
+            <Form.Select placeholder="Select server" defaultValue={0} options={this.state.servers} name='server' value={this.state.server} onChange={this.changeValue}/>
+            <Form.Group>
+              <Form.Input name="email" label='Email' type='text' onChange={this.changeValue}/>
+              <Form.Input name="password" label='Password' type='password' onChange={this.changeValue}/>
+            </Form.Group>
+            <Form.Button content='Sign in' />
+          </Form>
         </div>
         <Segment color='orange'>
           <Loader isLoading={this.state.isLoading} />
