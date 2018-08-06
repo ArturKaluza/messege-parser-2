@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import { Loader, List } from 'semantic-ui-react';
+import React, { Component, Fragment } from 'react'
+import { List, Segment } from 'semantic-ui-react';
 import axios from 'axios';
-import MailThreads from '../MailThreads/MailThreads'
+import Loader from '../Loader/Loader'
+import SingleMail from '../SingleMail/SingleMail'
 
 export default class Mail extends Component {
   
@@ -9,7 +10,7 @@ export default class Mail extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      threads: []
+      mails: []
     }
   }
   getData() {
@@ -25,27 +26,32 @@ export default class Mail extends Component {
 
   componentDidMount () {
     this.getData()
-      .then(threads => {
-        this.setState({ threads, isLoading: false });
+      .then(mails => {
+        this.setState({ mails, isLoading: false });
       })
   }
 
   render() {
-    const { threads } = this.state;
+    const { mails } = this.state;
     return (
-      <div>
-        <Loader isLoading={this.state.isLoading} />
-        <List divided relaxed>
-        {threads.map((thread, index) => {
-          return (
-            <MailThreads 
-              key={index}
-              data={thread}
-            />
-          )
-        })}
-        </List>
-      </div>
+      <Fragment>
+        <div className='column__header'>
+          <h2>E-mail</h2>
+        </div>
+        <Segment color='orange'>
+          <Loader isLoading={this.state.isLoading} />
+          <List divided relaxed>
+          {mails.map((mail, index) => {
+            return (
+              <SingleMail 
+                data={mail}
+                key={index}
+              />
+            )
+          })}
+          </List>
+        </Segment>
+      </Fragment>
     )
   }
 }

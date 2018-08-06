@@ -27,9 +27,13 @@ const getAllThemes = () => {
 
       return connection.search(searchCriteria, fetchOptions).then(function (results) {
           const data = results.map(function (res) {
-              return res.parts.filter(function (part) {
+              const thread = res.parts.filter(function (part) {
                   return part.which === 'HEADER';
               })[0].body.subject[0];
+              const from = res.parts.filter(function (part) {
+                  return part.which === 'HEADER';
+              })[0].body.from[0]
+              return { thread, from }
           });
 
           return data;
