@@ -30,6 +30,7 @@ class BitBucket extends Component {
   }
 
   componentWillReceiveProps(newProps) {
+    console.log(newProps.stateCommit);
     this.setState({activeTask: newProps.handleActiveTask, stateCommit: newProps.stateCommit})
   }
 
@@ -89,7 +90,7 @@ class BitBucket extends Component {
           id={item.sha}
           message={item.message}
           activeTask ={this.state.activeTask}
-          stateCommit={this.stateCommit}
+          stateCommit={this.state.stateCommit}
           taskID={item.taskID}
           addCommit={this.props.getBitCommit}
           />

@@ -25,7 +25,7 @@ class Main extends Component {
   }
 
   filterJiraTask(id, taskID) {
-    this.setState({activeTask: id, jiraTaskID: taskID}, console.log(this.state.jiraTaskID));
+    this.setState({activeTask: id, jiraTaskID: taskID});
   }
 
   getCommits(id) {
@@ -33,8 +33,15 @@ class Main extends Component {
       this.setState((prev) => {
         return {bitCommit: [...prev.bitCommit, id]}
       })
+    } else {
+      this.setState(prev => {
+        return {bitCommit: prev.bitCommit.filter(item => item !== id)}
+      })
     }
-    console.log(this.state.bitCommit)
+
+
+
+  //  console.log(this.state.bitCommit)
   }
 
   render() {
@@ -57,7 +64,7 @@ class Main extends Component {
             </Grid.Column>
             
             <Grid.Column className="tool-container">
-              <Github  handleActiveTask={this.state.activeTask} />
+              {/* <Github  handleActiveTask={this.state.activeTask} /> */}
             </Grid.Column>
 
             <Grid.Column className="tool-container">
