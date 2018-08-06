@@ -8,15 +8,17 @@ import Err from '../Error/Error';
 import Commit from '../Commit/Commit';
 
 class BitBucket extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props);
 
     this.state = {
       repositores: [],
       commits: [],
+      stateCommit: [],
       activeTask: false,      
       isLoading: false,      
       err: false
+
     }
 
     this.fetchCommits = this.fetchCommits.bind(this);
@@ -28,7 +30,7 @@ class BitBucket extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.handleActiveTask})
+    this.setState({activeTask: newProps.handleActiveTask, stateCommit: newProps.stateCommit})
   }
 
   fetchCommits(repo) {
@@ -87,7 +89,9 @@ class BitBucket extends Component {
           id={item.sha}
           message={item.message}
           activeTask ={this.state.activeTask}
+          stateCommit={this.stateCommit}
           taskID={item.taskID}
+          addCommit={this.props.getBitCommit}
           />
         )}
       </List>
@@ -98,6 +102,7 @@ class BitBucket extends Component {
 
   backToRepo() {
     this.setState({isLoading: true})
+
     axios.post(`/api/bitbucket`, {
       username: sessionStorage.getItem('username'),
       password: sessionStorage.getItem('password')
@@ -149,11 +154,10 @@ class BitBucket extends Component {
 
         {this.state.commits.length > 0 ? <Segment color='blue'>
                                             {this.renderBitBucket()}
-                                          
-                                        </Segment> : false }
-        
+                                        </Segment> : false }        
        
         {this.state.commits.length === 0 ? this.renderRepositores() : false}
+
         {this.state.err ? <Err text={'User nad password don\'t match'} /> : false}
       </div>
     )

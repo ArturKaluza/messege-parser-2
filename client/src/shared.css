@@ -4,7 +4,6 @@
 .list-item__active {
     background: skyblue;
     border-radius: 5px;
-    padding: 5px;
 }
 
 .column__header {

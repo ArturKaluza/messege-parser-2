@@ -14,14 +14,27 @@ class Main extends Component {
     super();
 
     this.state = {
-      activeTask: false
+      activeTask: false,
+      jiraTaskID: '',
+      bitCommit: []
+      
     };
 
     this.filterJiraTask = this.filterJiraTask.bind(this);
+    this.getCommits = this.getCommits.bind(this);
   }
 
-  filterJiraTask(id) {
-    this.setState({activeTask: id})
+  filterJiraTask(id, taskID) {
+    this.setState({activeTask: id, jiraTaskID: taskID}, console.log(this.state.jiraTaskID));
+  }
+
+  getCommits(id) {
+    if (this.state.bitCommit.filter(item => item === id).length === 0 ) {
+      this.setState((prev) => {
+        return {bitCommit: [...prev.bitCommit, id]}
+      })
+    }
+    console.log(this.state.bitCommit)
   }
 
   render() {
@@ -36,11 +49,11 @@ class Main extends Component {
           <Grid.Row>
             
             <Grid.Column className="tool-container">
-              <Jira jiraTask={this.filterJiraTask} handleActiveTask={this.state.activeTask} />
+              <Jira jiraTask={this.filterJiraTask} handleActiveTask={this.state.activeTask} onTaskID={this.setJiraTaskID} />
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <Slack handleActiveTask={this.state.activeTask}/>
+              <Slack handleActiveTask={this.state.activeTask} />
             </Grid.Column>
             
             <Grid.Column className="tool-container">
@@ -48,7 +61,7 @@ class Main extends Component {
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <BitBucket  handleActiveTask={this.state.activeTask} />
+              <BitBucket  handleActiveTask={this.state.activeTask} getBitCommit={this.getCommits} stateCommit={this.state.bitCommit} />
             </Grid.Column>
 
           </Grid.Row>

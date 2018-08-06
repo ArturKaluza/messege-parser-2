@@ -64,7 +64,8 @@ class Jira extends Component {
         {this.state.projects.map((item, index) => <List.Item
           className={this.state.activeTask === (index + 1) ? 'Jira__item list-item list-item__active' : 'list-item Jira__item'}
           key={index}
-          onClick={() => this.props.jiraTask(index + 1)}
+          onClick={() => this.props.jiraTask(index + 1, item.id)}
+          
           > 
             <div>
               {item.comment}

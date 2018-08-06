@@ -4,7 +4,8 @@ import './Commit.css';
 
 const Commit = (props) => {
   return (
-    <Fragment>
+  <div onClick={() => props.addCommit(props.id)} >
+    <Fragment >
     <List.Item className={props.activeTask === props.taskID ? 'list-item__active' : 'list-item'}>
       <Image avatar src={props.avatar} size='mini' spaced />
       <List.Content>
@@ -15,6 +16,7 @@ const Commit = (props) => {
     </List.Item>
     <Divider />
     </Fragment>
+  </div>
   )
 }
 
