@@ -19,11 +19,7 @@ export default class Mail extends Component {
       ]
     }
   }
-
-  componentDidMount () {
-    
-  }
-
+  
   changeValue = (e, { name, value }) =>  this.setState({ [name]: value })
 
   handleSubmit = (e) => {

@@ -1,25 +1,20 @@
 import React, { Component, Fragment } from 'react';
 import { List, Segment, Button, Form } from 'semantic-ui-react';
 import axios from 'axios';
+
 import './Slack.css'
 import Loader from '../Loader/Loader'
 import SlackMessage from '../SlackMessage/SlackMessage'
 
-// import TestComponent from '../TestComponent/TestComponent';
-
 class Slack extends Component {
-  constructor() {
-    super()
-
+  constructor(props) {
+    super(props)
     this.state = {
       messages: [],
       users: [],
       isLoading: false,
       channels: []
     }
-  }
-  randomNum() {
-    return Math.floor(Math.random() * 3) + 1;
   }
 
   getMessages(token, channel) {
@@ -31,11 +26,11 @@ class Slack extends Component {
         token,
         channel
       }
-    }
+    };
     return axios.get('https://slack.com/api/channels.history', config)
     .then(response => {
       const messages = response.data.messages.map(message => {
-        message.id = this.randomNum();
+        message.id = Math.floor(Math.random() * 3) + 1;
         return message;
       })
       this.setState({ messages: messages.reverse(), isLoading: false  })
@@ -44,6 +39,7 @@ class Slack extends Component {
 
   getUsers(token) {
     this.setState({ isLoading: true })
+    
     const config = {
       headers: { 
         'Content-Type':'application/x-www-form-urlencoded',
@@ -52,6 +48,7 @@ class Slack extends Component {
         token
       }
     }
+
     return axios.get('https://slack.com/api/users.list', config)
     .then(response => {
       const newMessages = [...this.state.messages];
@@ -136,15 +133,11 @@ class Slack extends Component {
               />
               )
             })}
-            {/* <List.Item>
-              <TestComponent/>
-            </List.Item> */}
           </List>
         </Segment>
       </Fragment>
     )
   }
 }
-
 
 export default Slack;
