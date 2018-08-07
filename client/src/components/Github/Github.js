@@ -25,13 +25,14 @@ class Github extends Component {
   }
 
   fetchCommits = repoName => {
-    const username = sessionStorage.getItem('username-github')
+    const username = sessionStorage.getItem('username-github');
+    const password = sessionStorage.getItem('password-github')
 
-    axios.post('/api/github/commit', {repoName, username})
+    axios.post('/api/github/commit', {repoName, username, password})
       .then(response => {
         const commits = response.data.map(commit => {
           return {
-            id: commit.id,
+            id: commit.sha,
             author: commit.author,
             message: commit.message,
             taskID: Math.floor(Math.random() * 3) + 1,

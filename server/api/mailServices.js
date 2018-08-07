@@ -45,9 +45,11 @@ const getAllThemes = (email, password, host) => {
                 });
 
                 return data;
-            });
+            })
+            .catch(() => res.status(404).end())
         });
-    });
+    })
+    
 }
 
 module.exports = {
