@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const fetch = require('node-fetch');
 const Octokit = require('@octokit/rest')
 const github = new Octokit()
 
@@ -14,7 +13,7 @@ router.post('/', (req, res) => {
     username: username,
     password: password
   })
-  github.repos.getAll()
+  github.repos.getAll({ affiliation: 'owner' })
   .then(repos => {
     return repos.data.map(repo => {
       return {
@@ -32,12 +31,18 @@ router.post('/', (req, res) => {
 
 // get commits from repositores
 router.post('/commit', (req, res) => {
-  const { username, repoName } = req.body;
+  const {username, password, repoName} = req.body;
+  
+  github.authenticate({
+    type: 'basic',
+    username: username,
+    password: password
+  })
+
   github.repos.getCommits({owner: username, repo: repoName})
   .then(res => {
     return res.data.map(commit => {
       return {
-        id: commit.author.id,
         author: commit.commit.author.name,
         message: commit.commit.message,
         sha: commit.sha,
@@ -46,7 +51,6 @@ router.post('/commit', (req, res) => {
     })
   })
   .then(data => {
-    console.log(data)
     res.status(200).send(data)
   })
   .catch(() => res.status(404).end());
