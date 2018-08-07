@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Main.css';
 import { Grid, Divider } from 'semantic-ui-react'
+import xor from 'lodash/xor';
 
 import Slack from '../components/Slack/Slack';
 import Github from '../components/Github/Github';
@@ -31,15 +32,17 @@ class Main extends Component {
   }
 
   getCommits(id) {
-    if (this.state.bitCommit.filter(item => item === id).length === 0 ) {
-      this.setState((prev) => {
-        return {bitCommit: [...prev.bitCommit, id]}
-      })
-    } else {
-      this.setState(prev => {
-        return {bitCommit: prev.bitCommit.filter(item => item !== id)}
-      })
-    }
+    const bitCommit = xor(this.state.bitCommit, [id])
+    this.setState({ bitCommit });
+    // if (this.state.bitCommit.filter(item => item === id).length === 0 ) {
+    //   this.setState((prev) => {
+    //     return {bitCommit: [...prev.bitCommit, id]}
+    //   })
+    // } else {
+    //   this.setState(prev => {
+    //     return {bitCommit: prev.bitCommit.filter(item => item !== id)}
+    //   })
+    // }
   //  console.log(this.state.bitCommit)
   }
 
