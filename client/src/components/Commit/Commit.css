@@ -8,8 +8,3 @@
 .black {
   color: #000;
 }
-
-.state {
-  outline: 2px solid #000;
-  outline-offset: 3px;
-}

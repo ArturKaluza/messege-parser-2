@@ -22,9 +22,12 @@ class Main extends Component {
 
       bitCommits: [],
       bitRepoName: undefined,
+
+      githubCommits: [],
+      githubRepoName: undefined,
       
-      githubCommits: []
-      
+      mailsToDb: [],
+      mailName: undefined
     };
 
     this.filterJiraTask = this.filterJiraTask.bind(this);
@@ -47,8 +50,17 @@ class Main extends Component {
     this.setState({ githubCommits });
   }
 
-  getRepoName(name) {
-    this.setState({bitRepoName: name});
+  getMails = (id) => {
+    const mailsToDb = xor(this.state.mailsToDb, [id])
+    this.setState({ mailsToDb });
+  }
+
+  getRepoName(name, nameTool) {
+    this.setState({ [nameTool] : name});
+  }
+
+  getMailName = name => {
+    this.setState({ mailName: name});
   }
 
   stateToDB() {
@@ -59,7 +71,12 @@ class Main extends Component {
 
       bitCommits: this.state.bitCommits,
       bitRepoName: this.state.bitRepoName,
-      
+
+      gitCommits: this.state.githubCommits,
+      gitRepoName: this.state.githubRepoName,
+
+      mailsID: this.state.mailsToDb,
+      email: this.state.mailName,
       // gitUserName,
       // gitRepoName,
       // gitCommits,
@@ -82,7 +99,7 @@ class Main extends Component {
   }
   
   render() {
-    
+    console.log(this.state)
     return (
       <div>
 
@@ -98,22 +115,39 @@ class Main extends Component {
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <Slack handleActiveTask={this.state.activeTask} />
+              <Slack 
+                handleActiveTask={this.state.activeTask} 
+              />
             </Grid.Column>
             
             <Grid.Column className="tool-container">
-              <Github  handleActiveTask={this.state.activeTask} getCommit={this.getCommitsGithub} stateCommit={this.state.githubCommits}/>
+              <Github  
+                handleActiveTask={this.state.activeTask} 
+                getCommit={this.getCommitsGithub} 
+                stateCommit={this.state.githubCommits} 
+                handleRepoName={this.getRepoName}
+              />
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <BitBucket  handleActiveTask={this.state.activeTask} getBitCommit={this.getCommits} stateCommit={this.state.bitCommits} handleRepoName={this.getRepoName} />
+              <BitBucket  
+                handleActiveTask={this.state.activeTask} 
+                getBitCommit={this.getCommits} 
+                stateCommit={this.state.bitCommits} 
+                handleRepoName={this.getRepoName} 
+              />
             </Grid.Column>
 
           </Grid.Row>
           <Divider fitted ></Divider>
           <Grid.Row columns={4} divided>
             <Grid.Column className="tool-container">
-              <Mail />
+              <Mail
+                handleActiveTask={this.state.activeTask} 
+                getMails={this.getMails} 
+                stateMails={this.state.mailsToDb} 
+                handleMailName={this.getMailName}
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>

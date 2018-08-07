@@ -38,12 +38,17 @@ const getAllThemes = (email, password, host) => {
                     const thread = res.parts.filter(function (part) {
                         return part.which === 'HEADER';
                     })[0].body.subject[0];
+
                     const from = res.parts.filter(function (part) {
                         return part.which === 'HEADER';
                     })[0].body.from[0]
-                    return { thread, from }
-                });
+                    
+                    const messageId = res.parts.filter(function (part) {
+                        return part.which === 'HEADER';
+                    })[0].body['message-id'][0]
 
+                    return { thread, from, messageId }
+                });
                 return data;
             })
             .catch(() => res.status(404).end())
