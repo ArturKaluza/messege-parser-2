@@ -3,6 +3,7 @@ import { List, Image, Divider } from 'semantic-ui-react';
 import './Commit.css';
 
 const Commit = (props) => {
+  console.log(props)
   return (
     <div onClick={() => props.addCommit(props.id)} className={props.stateCommit.filter(item => item === props.id).length === 0 ? '' : 'state' }>
       <Fragment >
