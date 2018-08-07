@@ -92,7 +92,7 @@ class BitBucket extends Component {
           id={item.sha}
           message={item.message}
           activeTask ={this.state.activeTask}
-          stateCommit={this.state.stateCommit}
+          stateCommit={this.props.stateCommit}
           taskID={item.taskID}
           addCommit={this.props.getBitCommit}
           />

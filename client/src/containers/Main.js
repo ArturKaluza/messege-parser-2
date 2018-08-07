@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Main.css';
 import { Grid, Divider } from 'semantic-ui-react'
+import xor from 'lodash/xor';
 
 import Slack from '../components/Slack/Slack';
 import Github from '../components/Github/Github';
@@ -16,7 +17,8 @@ class Main extends Component {
     this.state = {
       activeTask: false,
       jiraTaskID: '',
-      bitCommit: [],
+      bitCommits: [],
+      githubCommits: [],
       bitName: ''
       
     };
@@ -31,21 +33,17 @@ class Main extends Component {
   }
 
   getCommits(id) {
-    if (this.state.bitCommit.filter(item => item === id).length === 0 ) {
-      this.setState((prev) => {
-        return {bitCommit: [...prev.bitCommit, id]}
-      })
-    } else {
-      this.setState(prev => {
-        return {bitCommit: prev.bitCommit.filter(item => item !== id)}
-      })
-    }
-  //  console.log(this.state.bitCommit)
+    const bitCommits = xor(this.state.bitCommits, [id])
+    this.setState({ bitCommits });
+  }
+
+  getCommitsGithub = (id) => {
+    const githubCommits = xor(this.state.githubCommits, [id])
+    this.setState({ githubCommits });
   }
 
   getRepoName(name) {
     this.setState({bitName: name})
-    console.log(name);
   }
 
   render() {
@@ -68,11 +66,11 @@ class Main extends Component {
             </Grid.Column>
             
             <Grid.Column className="tool-container">
-              {/* <Github  handleActiveTask={this.state.activeTask} /> */}
+              <Github  handleActiveTask={this.state.activeTask} getCommit={this.getCommitsGithub} stateCommit={this.state.githubCommits}/>
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <BitBucket  handleActiveTask={this.state.activeTask} getBitCommit={this.getCommits} stateCommit={this.state.bitCommit} handleRepoName={this.getRepoName} />
+              <BitBucket  handleActiveTask={this.state.activeTask} getBitCommit={this.getCommits} stateCommit={this.state.bitCommits} handleRepoName={this.getRepoName} />
             </Grid.Column>
 
           </Grid.Row>
