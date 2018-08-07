@@ -24,7 +24,7 @@ class Jira extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.handleActiveTask})
+    this.setState({activeTask: newProps.activeTask})
   }
 
   checkActiveTask() {
@@ -38,11 +38,6 @@ class Jira extends Component {
     
     axios.get(`/api/jira/${key.value}`)
       .then(res => {
-        // console.log(res.data.worklogs[0]);
-        // console.log(res.data.worklogs[0].author.name)
-        // console.log(res.data.worklogs[0].comment)
-        // console.log(res.data.worklogs[0].id)
-
         this.setState({author: res.data.worklogs[0].author.name})
         const projectArray = res.data.worklogs.map((item, index) => {
           let obj = {}
@@ -67,17 +62,18 @@ class Jira extends Component {
       {this.state.projects.length === 0 ? false : <h3 className='user__title' >User name: {this.state.author}</h3>}
       <List>
         {this.state.projects.map((item, index) => <List.Item
-          className={this.state.activeTask === (index + 1) ? 'Jira__item list-item list-item__active' : 'list-item Jira__item'}
+          className={this.state.activeTask === item.id ? 'Jira__item list-item list-item__active' : 'list-item Jira__item'}
           key={index}
           onClick={() => this.props.jiraTask(item.id, item.author, item.comment)}
-          
           > 
+        
             <div>
               {item.comment}
             </div>
             <div>
               <p>id: {item.id}</p>
             </div>
+        
         </List.Item>
         )}
       </List>

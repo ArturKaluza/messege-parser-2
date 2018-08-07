@@ -76,7 +76,7 @@ class Main extends Component {
     .then(res => console.log(res.data))
     .catch(e => console.log(e));
   }
-
+  
   render() {
     
     return (
@@ -84,13 +84,13 @@ class Main extends Component {
 
          <div className='title'>
             <h1>Message-Parse-App </h1>
-            <Button content='Add Connection' primary onClick={this.stateToDB} />
+            <Button content='Add Connection' primary onClick={this.stateToDB} disabled={!this.state.author && !this.state.jiraComment && !this.state.jiraTaskID} />
         </div>
          <Grid columns={4} divided >
           <Grid.Row>
             
             <Grid.Column className="tool-container">
-              <Jira jiraTask={this.filterJiraTask} handleActiveTask={this.state.activeTask} onTaskID={this.setJiraTaskID} />
+              <Jira jiraTask={this.filterJiraTask} activeTask={this.state.jiraTaskID} />
             </Grid.Column>
 
             <Grid.Column className="tool-container">
