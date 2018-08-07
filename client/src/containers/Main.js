@@ -52,8 +52,6 @@ class Main extends Component {
   }
 
   stateToDB() {
-    console.log(this.state)
-
     Axios.post('/api/db', {
       author: this.state.author, 
       title: this.state.jiraComment, 
@@ -73,7 +71,13 @@ class Main extends Component {
       // email,
       // mailsID
     })
-    .then(res => console.log(res.data))
+    .then(res =>{
+      // clear state after creating record in DB
+      if (res.status === 200) {
+        this.setState({author: undefined, jiraTaskID: undefined, jiraComment: undefined, bitCommits: [], bitRepoName: undefined});
+      }
+      console.log(res.data)
+    })
     .catch(e => console.log(e));
   }
   

@@ -34,3 +34,7 @@
 .user__title {
   text-align: center;
 }
+
+.hide {
+  display: none;
+}

@@ -24,7 +24,7 @@ const taskSchema = new Schema({
 
   // GitHub
   gitUserName: {type: String},
-  gitRepoName: { type: String },
+  gitRepoName: {type: String},
   gitCommits: {
     type: [],
     default: undefined,
