@@ -34,6 +34,9 @@ class BitBucket extends Component {
   }
 
   fetchCommits(repo) {
+    // set repository name in <Main /> state
+    this.props.handleRepoName(repo.name);
+
     this.setState({isLoading: true});
     const password = sessionStorage.getItem('password')
 
@@ -89,7 +92,7 @@ class BitBucket extends Component {
           id={item.sha}
           message={item.message}
           activeTask ={this.state.activeTask}
-          stateCommit={this.stateCommit}
+          stateCommit={this.state.stateCommit}
           taskID={item.taskID}
           addCommit={this.props.getBitCommit}
           />

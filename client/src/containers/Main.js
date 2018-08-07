@@ -16,16 +16,18 @@ class Main extends Component {
     this.state = {
       activeTask: false,
       jiraTaskID: '',
-      bitCommit: []
+      bitCommit: [],
+      bitName: ''
       
     };
 
     this.filterJiraTask = this.filterJiraTask.bind(this);
     this.getCommits = this.getCommits.bind(this);
+    this.getRepoName = this.getRepoName.bind(this);
   }
 
   filterJiraTask(id, taskID) {
-    this.setState({activeTask: id, jiraTaskID: taskID}, console.log(this.state.jiraTaskID));
+    this.setState({activeTask: id, jiraTaskID: taskID});
   }
 
   getCommits(id) {
@@ -33,8 +35,17 @@ class Main extends Component {
       this.setState((prev) => {
         return {bitCommit: [...prev.bitCommit, id]}
       })
+    } else {
+      this.setState(prev => {
+        return {bitCommit: prev.bitCommit.filter(item => item !== id)}
+      })
     }
-    console.log(this.state.bitCommit)
+  //  console.log(this.state.bitCommit)
+  }
+
+  getRepoName(name) {
+    this.setState({bitName: name})
+    console.log(name);
   }
 
   render() {
@@ -57,11 +68,11 @@ class Main extends Component {
             </Grid.Column>
             
             <Grid.Column className="tool-container">
-              <Github  handleActiveTask={this.state.activeTask} />
+              {/* <Github  handleActiveTask={this.state.activeTask} /> */}
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <BitBucket  handleActiveTask={this.state.activeTask} getBitCommit={this.getCommits} stateCommit={this.state.bitCommit} />
+              <BitBucket  handleActiveTask={this.state.activeTask} getBitCommit={this.getCommits} stateCommit={this.state.bitCommit} handleRepoName={this.getRepoName} />
             </Grid.Column>
 
           </Grid.Row>
