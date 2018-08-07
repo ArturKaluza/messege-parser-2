@@ -1,88 +1,145 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Segment, List } from 'semantic-ui-react';
+import { Segment, List, Form } from 'semantic-ui-react';
 import './Github.css';
 import Loader from '../Loader/Loader'
+
+import './Github.css';
 
 import Commit from '../Commit/Commit';
 
 class Github extends Component {
-  constructor() {
-    super()
-
+  constructor(props) {
+    super(props);
     this.state = {
+      repositores: [],
       commits: [],
       activeTask: false,
-      isLoading: true
+      isLoading: false,
+      err: false,
     }
-
-    this.fetchCommits = this.fetchCommits.bind(this);
-    this.randomNum = this.randomNum.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchCommits();
   }
 
   componentWillReceiveProps(newProps) {
     this.setState({activeTask: newProps.handleActiveTask})
   }
 
-  fetchCommits() {
-    axios.get('https://api.github.com/repos/ArturKaluza/alm/commits')
+  fetchCommits = repoName => {
+    const username = sessionStorage.getItem('username-github')
+
+    axios.post('/api/github/commit', {repoName, username})
       .then(response => {
-        const arr = response.data.map(commit => {
-          const date = {}
-          date.avatarUrl = commit.author.avatar_url
-          date.author = commit.author.login
-          date.sha = commit.sha;
-          date.message = commit.commit.message;
-          date.taskID = this.randomNum()
-                  
-        return date;
+        const commits = response.data.map(commit => {
+          return {
+            author: commit.author,
+            message: commit.message,
+            taskID: Math.floor(Math.random() * 3) + 1,
+            sha: commit.sha,
+            avatar: commit.avatar
+          }  
         })
-        this.setState({commits: arr, isLoading: false})
-      })
+        this.setState({ commits })
+    });
   }
 
-  randomNum() {
-    return Math.floor(Math.random() * 3) + 1;
-  }
-
-  renderGithub() {
+  renderCommits = () => {
     return (
-      <List>
-       
-        {this.state.commits.map((item, index) => <Commit 
-          key={index}
-          avatar={item.avatarUrl}
-          author={item.author}
-          id={item.sha}
-          message={item.message}
-          activeTask ={this.state.activeTask}
-          taskID={item.taskID}
-          
-          />
-        )}
-      </List>
+      <Segment color='black' style={{textAlign: 'center'}}>
+        <List>
+          {this.state.commits.map((item, index) => <Commit 
+            key={item.id}
+            avatar={item.avatar}
+            author={item.author}
+            id={item.id}
+            message={item.message}
+            activeTask ={this.state.activeTask}
+            taskID={item.taskID}
+            />
+          )}
+        </List>
+        <button className='btn__back' onClick={() => this.backToRepo()}>Back</button>
+      </Segment>
+    )
+  }
+  getRepository = (e) => {
+    e.preventDefault();
+    this.setState({isLoading: true})
+    const {username, password} = e.target;
+    
+    sessionStorage.setItem('username-github', username.value);
+    sessionStorage.setItem('password-github', password.value);
+
+    axios.post(`/api/github`, {
+      username: username.value,
+      password: password.value,
+    })
+    .then(res => this.setState({repositores: res.data, isLoading: false}))
+    .catch(e => {
+      this.setState({isLoading: false, err: true})
+      setTimeout(() => {
+        this.setState({err: false})
+      }, 2500);
+    });
+  }
+
+  backToRepo = () => {
+    this.setState({isLoading: true})
+    axios.post(`/api/github`, {
+      username: sessionStorage.getItem('username-github'),
+      password: sessionStorage.getItem('password-github')
+    })
+    .then(res => this.setState({repositores: res.data, commits: [], isLoading: false}))
+    .catch(e => console.log(e));
+  }
+
+  renderForm = () => {
+    return(
+      <div>
+        <h3 style={{textAlign: 'center'}}>Login</h3>
+        <Form onSubmit={this.getRepository} style={{marginTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', flexDirection: 'column' }} >
+          <Form.Group style={{flexDirection: 'column', textAlign: 'center'}}>
+            <Form.Input required placeholder="username" name='username' />
+            <Form.Input required placeholder="password" name='password' type='password'/>
+            <Form.Button content='Submit' style={{marginTop: '20px'}} />
+          </Form.Group>
+        </Form>
+      </div>
     )
   }
 
+  renderRepositores = (item) => {
+    return (
+      <div className='repo'
+        key={item.id} 
+        onClick={() => this.fetchCommits(item.name)}            
+      >
+        {item.name}
+      </div>
+      )
+    }            
+
   render() {
+    const { commits, repositores, isLoading } = this.state;
+    const { renderForm, renderCommits, renderRepositores } = this;
     return (
       <div>
         <div className='column__header'>
           <h2>Github</h2>
-          <h3>Repozitory name: alm</h3>
         </div>
-        <Segment color='black'>
-          <Loader isLoading={this.state.isLoading} />
-          {this.renderGithub()}
-        </Segment>
+        {repositores.length === 0 && renderForm()}
+        <Loader isLoading={isLoading} />
+        {commits.length > 0 && renderCommits()}
+        {(commits.length === 0 && repositores.length > 0 ) &&
+          <Segment color='black'>
+            <List>
+              {repositores.map(renderRepositores)}
+            </List>  
+          </Segment>  
+        }
       </div>
-    )
-  }
-}
+    );
+  };
+};
 
 export default Github;
 
