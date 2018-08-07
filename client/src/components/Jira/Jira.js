@@ -38,17 +38,22 @@ class Jira extends Component {
     
     axios.get(`/api/jira/${key.value}`)
       .then(res => {
-      this.setState({author: res.data.worklogs[0].author.name})
-      const projectArray = res.data.worklogs.map((item, index) => {
-        let obj = {}
-        
-        obj.comment = item.comment;
-        obj.id = item.id;
+        console.log(res.data.worklogs[0]);
+        console.log(res.data.worklogs[0].author.name)
+        console.log(res.data.worklogs[0].comment)
+        console.log(res.data.worklogs[0].id)
 
-        return obj;
-      })
+        this.setState({author: res.data.worklogs[0].author.name})
+        const projectArray = res.data.worklogs.map((item, index) => {
+          let obj = {}
+          obj.author = item.author
+          obj.comment = item.comment;
+          obj.id = item.id;
+
+          return obj;
+        })
      
-      this.setState({projects: projectArray})
+        this.setState({projects: projectArray})
      
     })
     .catch(e => console.log(e));
