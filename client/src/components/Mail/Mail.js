@@ -44,10 +44,10 @@ export default class Mail extends Component {
         <div className='column__header'>
           <h2>E-mail</h2>
           <Form onSubmit={this.handleSubmit} style={{marginTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
-            <Form.Select placeholder="Select server" defaultValue={0} options={this.state.servers} name='server' value={this.state.server} onChange={this.changeValue}/>
+            <Form.Select required placeholder="Select server" options={this.state.servers} name='server' value={this.state.server} onChange={this.changeValue}/>
             <Form.Group>
-              <Form.Input name="email" label='Email' type='text' onChange={this.changeValue}/>
-              <Form.Input name="password" label='Password' type='password' onChange={this.changeValue}/>
+              <Form.Input required name="email" label='Email' type='text' onChange={this.changeValue}/>
+              <Form.Input required name="password" label='Password' type='password' onChange={this.changeValue}/>
             </Form.Group>
             <Form.Button content='Sign in' />
           </Form>
