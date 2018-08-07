@@ -38,15 +38,15 @@ class Jira extends Component {
     
     axios.get(`/api/jira/${key.value}`)
       .then(res => {
-        console.log(res.data.worklogs[0]);
-        console.log(res.data.worklogs[0].author.name)
-        console.log(res.data.worklogs[0].comment)
-        console.log(res.data.worklogs[0].id)
+        // console.log(res.data.worklogs[0]);
+        // console.log(res.data.worklogs[0].author.name)
+        // console.log(res.data.worklogs[0].comment)
+        // console.log(res.data.worklogs[0].id)
 
         this.setState({author: res.data.worklogs[0].author.name})
         const projectArray = res.data.worklogs.map((item, index) => {
           let obj = {}
-          obj.author = item.author
+          obj.author = item.author.name
           obj.comment = item.comment;
           obj.id = item.id;
 
@@ -69,7 +69,7 @@ class Jira extends Component {
         {this.state.projects.map((item, index) => <List.Item
           className={this.state.activeTask === (index + 1) ? 'Jira__item list-item list-item__active' : 'list-item Jira__item'}
           key={index}
-          onClick={() => this.props.jiraTask(index + 1, item.id)}
+          onClick={() => this.props.jiraTask(item.id, item.author, item.comment)}
           
           > 
             <div>

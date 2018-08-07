@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Main.css';
-import { Grid, Divider } from 'semantic-ui-react'
+import { Grid, Divider, Button } from 'semantic-ui-react'
 import xor from 'lodash/xor';
 
 import Slack from '../components/Slack/Slack';
@@ -8,6 +8,7 @@ import Github from '../components/Github/Github';
 import BitBucket from '../components/BitBucket/BitBucket';
 import Jira from '../components/Jira/Jira';
 import Mail from '../components/Mail/Mail';
+import Axios from '../../node_modules/axios';
 
 
 class Main extends Component {
@@ -15,21 +16,25 @@ class Main extends Component {
     super();
 
     this.state = {
-      activeTask: false,
-      jiraTaskID: '',
+      author: undefined,
+      jiraTaskID: undefined,
+      jiraComment: undefined,
+
       bitCommits: [],
-      githubCommits: [],
-      bitName: ''
+      bitRepoName: undefined,
+      
+      githubCommits: []
       
     };
 
     this.filterJiraTask = this.filterJiraTask.bind(this);
     this.getCommits = this.getCommits.bind(this);
     this.getRepoName = this.getRepoName.bind(this);
+    this.stateToDB = this.stateToDB.bind(this);
   }
 
-  filterJiraTask(id, taskID) {
-    this.setState({activeTask: id, jiraTaskID: taskID});
+  filterJiraTask(taskID, author, comment) {
+    this.setState({jiraTaskID: taskID, author: author, jiraComment: comment});
   }
 
   getCommits(id) {
@@ -43,7 +48,33 @@ class Main extends Component {
   }
 
   getRepoName(name) {
-    this.setState({bitName: name})
+    this.setState({bitRepoName: name});
+  }
+
+  stateToDB() {
+    console.log(this.state)
+
+    Axios.post('/api/db', {
+      author: this.state.author, 
+      title: this.state.jiraComment, 
+      jiraid: this.state.jiraTaskID,
+
+      bitCommits: this.state.bitCommits,
+      bitRepoName: this.state.bitRepoName,
+      
+      // gitUserName,
+      // gitRepoName,
+      // gitCommits,
+      
+      // workspaceID,
+      // channelID,
+      // messages,
+      
+      // email,
+      // mailsID
+    })
+    .then(res => console.log(res.data))
+    .catch(e => console.log(e));
   }
 
   render() {
@@ -53,6 +84,7 @@ class Main extends Component {
 
          <div className='title'>
             <h1>Message-Parse-App </h1>
+            <Button content='Add Connection' primary onClick={this.stateToDB} />
         </div>
          <Grid columns={4} divided >
           <Grid.Row>
