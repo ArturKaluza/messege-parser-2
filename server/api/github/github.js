@@ -37,6 +37,7 @@ router.post('/commit', (req, res) => {
   .then(res => {
     return res.data.map(commit => {
       return {
+        id: commit.author.id,
         author: commit.commit.author.name,
         message: commit.commit.message,
         sha: commit.sha,
@@ -45,6 +46,7 @@ router.post('/commit', (req, res) => {
     })
   })
   .then(data => {
+    console.log(data)
     res.status(200).send(data)
   })
   .catch(() => res.status(404).end());
