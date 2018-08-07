@@ -5,15 +5,17 @@ const Task = require('../../DB/models/task');
 
 // create task
 router.post('/', (req, res) => {
-  const { author, title, jiraid, bitCommits, bitRepoName, gitUserName, gitRepoName, gitCommits, workspaceID,
+  const { author, title, jiraid, bitCommits, bitRepoName, gitRepoName, gitCommits, workspaceID,
     channelID, messages, email, mailsID } = req.body;
 
+    console.log(gitRepoName, gitCommits)
+    console.log(email, mailsID)
   if (!author && !title && !jiraid) {
     return res.status(400).json({error: 'author, title and jiraid require'})
   }
   
   const task = new Task({
-    author, title, jiraid, bitCommits, bitRepoName, gitUserName, gitRepoName, gitCommits, workspaceID,
+    author, title, jiraid, bitCommits, bitRepoName, gitRepoName, gitCommits, workspaceID,
     channelID, messages, email, mailsID
   })
 
