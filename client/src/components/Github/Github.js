@@ -25,6 +25,8 @@ class Github extends Component {
   }
 
   fetchCommits = repoName => {
+    this.props.handleRepoName(repoName, 'githubRepoName');
+
     const username = sessionStorage.getItem('username-github');
     const password = sessionStorage.getItem('password-github')
     

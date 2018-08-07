@@ -23,6 +23,8 @@ export default class Mail extends Component {
   changeValue = (e, { name, value }) =>  this.setState({ [name]: value })
 
   handleSubmit = (e) => {
+    this.props.handleMailName(this.state.email)
+
     this.setState({ isLoading: true })
     axios.post('/api/mail', {
       email: this.state.email,
@@ -55,11 +57,13 @@ export default class Mail extends Component {
         <Segment color='orange'>
           <Loader isLoading={this.state.isLoading} />
           <List divided relaxed>
-          {mails.map((mail, index) => {
+          {mails.map(mail => {
             return (
               <SingleMail 
                 data={mail}
-                key={index}
+                key={mail.messageId}
+                stateMails={this.props.stateMails}
+                addMail={this.props.getMails}
               />
             )
           })}
