@@ -8,8 +8,6 @@ router.post('/', (req, res) => {
   const { author, title, jiraid, bitCommits, bitRepoName, gitRepoName, gitCommits, workspaceID,
     channelID, messages, email, mailsID } = req.body;
 
-    console.log(gitRepoName, gitCommits)
-    console.log(email, mailsID)
   if (!author && !title && !jiraid) {
     return res.status(400).json({error: 'author, title and jiraid require'})
   }

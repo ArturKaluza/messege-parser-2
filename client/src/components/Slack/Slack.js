@@ -30,7 +30,6 @@ class Slack extends Component {
     return axios.get('https://slack.com/api/channels.history', config)
     .then(response => {
       const messages = response.data.messages.map(message => {
-        message.id = Math.floor(Math.random() * 3) + 1;
         return message;
       })
       this.setState({ messages: messages.reverse(), isLoading: false  })
@@ -92,6 +91,8 @@ class Slack extends Component {
   handleSubmit = () => {
     const { channel } = this.state
     const token = localStorage.getItem('token');
+    
+    this.props.handleChannelName(channel);
 
     return this.getMessages(token, channel)
     .then(this.getUsers(token));
@@ -105,6 +106,7 @@ class Slack extends Component {
   }
 
   render() {
+    const { handleActiveTask, getMessages, stateMessages } = this.props;
     return (
       <Fragment>
         <div className='column__header'>
@@ -129,7 +131,9 @@ class Slack extends Component {
               <SlackMessage
                 key={message.ts}
                 data={message}
-                activeTask={this.props.handleActiveTask}
+                activeTask={handleActiveTask}
+                stateMessages={stateMessages}
+                addMessage={getMessages}
               />
               )
             })}
