@@ -20,10 +20,6 @@ class Github extends Component {
     }
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.handleActiveTask})
-  }
-
   fetchCommits = repoName => {
     this.props.handleRepoName(repoName, 'githubRepoName');
 

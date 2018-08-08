@@ -118,7 +118,6 @@ class Main extends Component {
   }
   
   render() {
-    console.log(this.state)
     return (
       <div>
 

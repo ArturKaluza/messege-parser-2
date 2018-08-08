@@ -26,10 +26,6 @@ class Jira extends Component {
     this.checkActiveTask();
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.activeTask})
-  }
-
   checkActiveTask() {
     this.setState({activeTask: this.props.handleActiveTask})
     

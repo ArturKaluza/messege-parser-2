@@ -11,28 +11,32 @@ class Slack extends Component {
     super(props)
     this.state = {
       messages: [],
-      users: [],
       isLoading: false,
-      channels: []
+      channels: [],
+      users: []
     }
   }
 
   getMessages(token, channel) {
     const config = {
-      headers: { 
-        'Content-Type':'application/x-www-form-urlencoded',
-      },
       params: {
         token,
         channel
       }
     };
-    return axios.get('https://slack.com/api/channels.history', config)
-    .then(response => {
-      const messages = response.data.messages.map(message => {
-        return message;
+    axios.get('api/slack/messages', config)
+    .then(res => {
+      const users = this.state.users
+      const messagesFromDb = res.data;
+      users.forEach(user => {
+        messagesFromDb.forEach(message => {
+          if (user.id === message.user) {
+            message.userName = user.name
+          }
+        }) 
       })
-      this.setState({ messages: messages.reverse(), isLoading: false  })
+
+      this.setState({ messages: messagesFromDb, isLoading: false })
     })
   }
 
@@ -40,41 +44,29 @@ class Slack extends Component {
     this.setState({ isLoading: true })
     
     const config = {
-      headers: { 
-        'Content-Type':'application/x-www-form-urlencoded',
-      },
       params: {
         token
       }
-    }
+    };
 
-    return axios.get('https://slack.com/api/users.list', config)
-    .then(response => {
-      const newMessages = [...this.state.messages];
-      response.data.members.forEach(user => {
-        newMessages.forEach(message => {
-          if (user.id === message.user) {
-            message.name = user.profile.display_name !== "" ? user.profile.display_name : user.profile.real_name;
-          }
-        })
-      })
-      this.setState({ message: newMessages })
+    return axios.get('/api/slack/users', config)
+    .then(res => {
+      this.setState({ users: res.data })
     })
   }
 
   getChannels(token) {
     this.setState({ isLoading: true })
+
     const config = {
-      headers: { 
-        'Content-Type':'application/x-www-form-urlencoded',
-      },
       params: {
         token
       }
     }
-    return axios.get('https://slack.com/api/channels.list', config)
+
+    return axios.get('api/slack/channels', config)
     .then(response => {
-      const channels = response.data.channels.map(channel => {
+      const channels = response.data.map(channel => {
         return {
           key: channel.id,
           value: channel.id,
@@ -94,18 +86,20 @@ class Slack extends Component {
     
     this.props.handleChannelName(channel);
 
-    return this.getMessages(token, channel)
-    .then(this.getUsers(token));
+    return this.getUsers(token)
+    .then(this.getMessages(token, channel))
   }
 
   componentDidMount() {
     const token = localStorage.getItem('token');
+    
     if(token) {
       this.getChannels(token)
     }
   }
 
   render() {
+    console.log(this.state)
     const { handleActiveTask, getMessages, stateMessages } = this.props;
     return (
       <Fragment>
