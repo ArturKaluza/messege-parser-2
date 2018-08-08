@@ -20,6 +20,7 @@ class Jira extends Component {
     this.getWorklogList = this.getWorklogList.bind(this);
     this.renderWorklog = this.renderWorklog.bind(this);
     this.renderLoginForm = this.renderLoginForm.bind(this);
+    
   }
   
   componentDidMount() {
@@ -73,8 +74,9 @@ class Jira extends Component {
           onClick={() => this.props.jiraTask(item.id, item.author, item.comment)}
           > 
         
-            <div>
-              {item.comment}
+            <div className='worklog'>
+              <h3>{item.comment}</h3>
+              <button className='worklog__btn' onClick={(e) => this.props.showTaskConnection(e, item.id)}>show</button>
             </div>
             <div>
               <p>id: {item.id}</p>
@@ -99,7 +101,6 @@ class Jira extends Component {
         sessionStorage.setItem('jiraUserName', username.value);
         sessionStorage.setItem('jiraPassword', password.value);
         this.setState({login: true});
-        console.log('login');
       }
     })
     .catch(e => console.log(e)); 

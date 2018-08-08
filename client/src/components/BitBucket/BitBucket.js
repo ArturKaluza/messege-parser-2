@@ -14,11 +14,11 @@ class BitBucket extends Component {
     this.state = {
       repositores: [],
       commits: [],
-      stateCommit: [],
       activeTask: false,      
       isLoading: false,      
-      err: false
-
+      err: false,
+      filterTask: {},
+      new: true
     }
 
     this.fetchCommits = this.fetchCommits.bind(this);
@@ -27,10 +27,64 @@ class BitBucket extends Component {
     this.renderRepositores = this.renderRepositores.bind(this);
     this.renderForm = this.renderForm.bind(this);
     this.backToRepo = this.backToRepo.bind(this);
+    this.filterTask = this.filterTask.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.handleActiveTask, stateCommit: newProps.stateCommit})
+  componentDidUpdate(prevProps, prevState) {
+    // if connection bettween task and commit not exsist
+    if (!this.props.filterTask) {
+      return
+    }
+    console.log('pracuje')
+    if (this.state.new) {
+      this.filterTask(this.props.filterTask);
+    }
+    // preventing from crash
+    if (this.props.filterTask._id === this.props.filterTask._id) {
+      return
+    }
+  }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //  // console.log(nextProps.filterTask.bitCommits[0])
+  //  if (this.state.commits.length > 0) {
+  //   console.log('con1')
+
+  //   // console.log(this.state.commits[0].sha)
+  //   // console.log(prevProps.filterTask.bitCommits[0]);
+
+  //   if (this.state.commits[0].sha === nextProps.filterTask.bitCommits[0]) {
+  //     console.log('con2')
+  //     return false
+  //   }
+    
+  //   return false
+ 
+  // }
+  //   return true;
+  // }
+
+  filterTask(arg) {
+      axios.post('/api/bitbucket/filter', {
+        username: sessionStorage.getItem('username'),
+        password: sessionStorage.getItem('password'),
+        repoName: arg.bitRepoName
+      })
+      .then(res => {
+        const filterArr = filterArray(arg.bitCommits, res.data);
+             
+        const arr = filterArr.map(commit => {
+          const date = {}
+          date.author = commit.author.raw
+          date.sha = commit.hash;
+          date.message = commit.message;
+          date.taskID = this.randomNum()
+                  
+        return date;
+      })
+      this.setState({ commits: arr, repositores: arg.bitRepoName, new: false })
+    })
+    .catch(e => console.log(e));
   }
 
   fetchCommits(repo) {
@@ -112,8 +166,6 @@ class BitBucket extends Component {
     })
     .then(res => this.setState({repositores: res.data, commits: [], isLoading: false}))
     .catch(e => console.log(e));
-      
-    
   }
 
   renderRepositores() {
@@ -168,3 +220,14 @@ class BitBucket extends Component {
 }
 
 export default BitBucket;
+
+const filterArray = (arr1, arr2) => {
+  const finalArray = []
+
+  arr1.forEach(e1 => arr2.forEach(e2 => {
+    if (e1 === e2.hash) {
+      finalArray.push(e2)
+    }
+  }))
+return finalArray;
+}

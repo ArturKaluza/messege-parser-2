@@ -10,7 +10,7 @@ const taskSchema = new Schema({
     type: String,
     require: true
   },
-  jiraID: {
+  jiraid: {
     type: Number,
     require: true
   },
