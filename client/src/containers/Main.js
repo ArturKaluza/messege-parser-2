@@ -27,7 +27,10 @@ class Main extends Component {
       githubRepoName: undefined,
       
       mailsToDb: [],
-      mailName: undefined
+      mailName: undefined,
+
+      messages: [],
+      channelID: undefined,
     };
 
     this.filterJiraTask = this.filterJiraTask.bind(this);
@@ -40,6 +43,10 @@ class Main extends Component {
     this.setState({jiraTaskID: taskID, author: author, jiraComment: comment});
   }
 
+  getRepoName(name, nameTool) {
+    this.setState({ [nameTool] : name});
+  }
+  
   getCommits(id) {
     const bitCommits = xor(this.state.bitCommits, [id])
     this.setState({ bitCommits });
@@ -54,14 +61,20 @@ class Main extends Component {
     const mailsToDb = xor(this.state.mailsToDb, [id])
     this.setState({ mailsToDb });
   }
-
-  getRepoName(name, nameTool) {
-    this.setState({ [nameTool] : name});
-  }
-
   getMailName = name => {
     this.setState({ mailName: name});
   }
+
+  getMessages = id => {
+    const messages = xor(this.state.messages, [id])
+    this.setState({ messages });
+  }
+
+  getChannelId = (channelID) => {
+    this.setState({ channelID });
+  }
+
+
 
   stateToDB() {
     Axios.post('/api/db', {
@@ -77,21 +90,27 @@ class Main extends Component {
 
       mailsID: this.state.mailsToDb,
       email: this.state.mailName,
-      // gitUserName,
-      // gitRepoName,
-      // gitCommits,
+
+      channelID: this.state.channelID,
+      messages: this.state.messages
       
-      // workspaceID,
-      // channelID,
-      // messages,
-      
-      // email,
-      // mailsID
     })
     .then(res =>{
       // clear state after creating record in DB
       if (res.status === 200) {
-        this.setState({author: undefined, jiraTaskID: undefined, jiraComment: undefined, bitCommits: [], bitRepoName: undefined});
+        this.setState({
+          author: undefined,
+          jiraTaskID: undefined,
+          jiraComment: undefined,
+          bitCommits: [], 
+          bitRepoName: undefined,
+          githubCommits: [],
+          githubRepoName: undefined,
+          mailsToDb: [],
+          mailName: undefined,
+          messages: [],
+          channelID: undefined,
+        });
       }
       console.log(res.data)
     })
@@ -111,12 +130,18 @@ class Main extends Component {
           <Grid.Row>
             
             <Grid.Column className="tool-container">
-              <Jira jiraTask={this.filterJiraTask} activeTask={this.state.jiraTaskID} />
+              <Jira 
+                jiraTask={this.filterJiraTask} 
+                activeTask={this.state.jiraTaskID} 
+              />
             </Grid.Column>
 
             <Grid.Column className="tool-container">
               <Slack 
-                handleActiveTask={this.state.activeTask} 
+                handleActiveTask={this.state.activeTask}
+                getMessages={this.getMessages} 
+                stateMessages={this.state.messages} 
+                handleChannelName={this.getChannelId}
               />
             </Grid.Column>
             

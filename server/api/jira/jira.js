@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
   const { username, password } = req.body;
   const hash = base64.encode(username + ':' + password);
 
-  // checking valid username and password
+// checking valid username and password
   fetch(`https://supportdesk.almservices.pl/rest/api/2/issue/almaca-38/worklog`, {
     headers: {
       "Authorization": 'Basic ' + hash                              
