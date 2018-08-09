@@ -118,7 +118,6 @@ class Main extends Component {
   }
   
   render() {
-    console.log(this.state)
     return (
       <div>
 
@@ -137,12 +136,12 @@ class Main extends Component {
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <Slack 
+              {/* <Slack 
                 handleActiveTask={this.state.activeTask}
                 getMessages={this.getMessages} 
                 stateMessages={this.state.messages} 
                 handleChannelName={this.getChannelId}
-              />
+              /> */}
             </Grid.Column>
             
             <Grid.Column className="tool-container">

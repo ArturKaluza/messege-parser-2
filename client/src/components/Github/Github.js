@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Segment, List, Form } from 'semantic-ui-react';
 import './Github.css';
 import Loader from '../Loader/Loader'
+import Err from '../Error/Error';
 
 import './Github.css';
 
@@ -83,9 +84,15 @@ class Github extends Component {
       username: username.value,
       password: password.value,
     })
-    .then(res => this.setState({repositores: res.data, isLoading: false}))
+    .then(res => {
+     
+      this.setState({repositores: res.data, isLoading: false}) }) 
     .catch(e => {
       this.setState({isLoading: false, err: true})
+      
+      username.value = '';
+      password.value = '';
+
       setTimeout(() => {
         this.setState({err: false})
       }, 2500);
@@ -146,6 +153,8 @@ class Github extends Component {
             </List>  
           </Segment>  
         }
+
+        {this.state.err ? <Err text={'User nad password don\'t match'} /> : false}
       </div>
     );
   };

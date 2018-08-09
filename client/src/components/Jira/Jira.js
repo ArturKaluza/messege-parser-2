@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './Jira.css';
 import { List, Segment, Form } from 'semantic-ui-react';
-
+import Err from '../Error/Error';
 
 
 class Jira extends Component {
@@ -13,7 +13,8 @@ class Jira extends Component {
       projects: [],
       activeTask: false,
       author: '',
-      login: false
+      login: false,
+      err: false
     }
 
     this.checkActiveTask = this.checkActiveTask.bind(this);
@@ -99,10 +100,14 @@ class Jira extends Component {
         sessionStorage.setItem('jiraUserName', username.value);
         sessionStorage.setItem('jiraPassword', password.value);
         this.setState({login: true});
-        console.log('login');
       }
     })
-    .catch(e => console.log(e)); 
+    .catch(e => {
+      this.setState({err: true})
+      setTimeout(() => {
+        this.setState({err: false})
+      }, 2500);      
+    }); 
   }
 
   renderLoginForm() {
@@ -140,7 +145,8 @@ class Jira extends Component {
         </div>
         
         {this.state.projects.length === 0 ? false : this.renderWorklog()}
-      
+
+        {this.state.err ? <Err text={'Password incorrect'} /> : false}    
 
       </div>
     )
