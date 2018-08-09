@@ -24,6 +24,47 @@ class Github extends Component {
     this.setState({activeTask: newProps.handleActiveTask})
   }
 
+  componentDidUpdate(prevProps) {
+    if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
+      const username = sessionStorage.getItem('username-github');
+      const password = sessionStorage.getItem('password-github')
+      const repoName = this.props.relatedToShow.gitRepoName;
+
+      if(!this.props.relatedToShow) {
+        this.setState({commits: [
+          {
+            id: 0,
+            author: 'Not Found',
+            message: "Not Found",
+            sha: 0,
+            avatar: ''
+          }
+        ]})
+      }
+
+      axios.post('/api/github/commit', {username, password, repoName})
+      .then(response => {
+        const commits = response.data.map(commit => {
+          return {
+            id: commit.sha,
+            author: commit.author,
+            message: commit.message,
+            taskID: Math.floor(Math.random() * 3) + 1,
+            sha: commit.sha,
+            avatar: commit.avatar
+          }  
+        })
+        .filter(commit => {
+          return this.props.relatedToShow.gitCommits.includes(commit.id)
+        })
+        return commits;
+      })
+      .then(res => {
+        console.log(res)
+        this.setState({ commits:res })
+      })
+    }
+  }
   fetchCommits = repoName => {
     this.props.handleRepoName(repoName, 'githubRepoName');
 
@@ -67,7 +108,7 @@ class Github extends Component {
             }
           )}
         </List>
-        <button className='btn__back' onClick={() => this.backToRepo()}>Back</button>
+        {this.props.isBindMode && <button className='btn__back' onClick={() => this.backToRepo()}>Back</button> }
       </Segment>
     )
   }
