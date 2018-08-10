@@ -7,7 +7,7 @@ const Commit = (props) => {
     <div onClick={() => props.addCommit(props.id)} className={props.stateCommit.filter(item => item === props.id).length === 0 ? '' : 'state' }>
       <Fragment >
       <List.Item className={props.activeTask === props.taskID ? 'list-item__active' : 'list-item'}>
-        <Image avatar src={props.avatar} size='mini' spaced />
+        <Image avatar src={props.id === 0 ? '' : props.avatar} size='mini' spaced />
         <List.Content>
           <List.Header as='a'>{props.author.raw || props.author} </List.Header>
         </List.Content>

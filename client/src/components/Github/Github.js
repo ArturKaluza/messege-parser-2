@@ -29,9 +29,9 @@ class Github extends Component {
       const username = sessionStorage.getItem('username-github');
       const password = sessionStorage.getItem('password-github')
       const repoName = this.props.relatedToShow.gitRepoName;
-
-      if(!this.props.relatedToShow) {
-        this.setState({commits: [
+      
+      if(this.props.relatedToShow && this.props.relatedToShow.gitCommits.length === 0) {
+        return this.setState({commits: [
           {
             id: 0,
             author: 'Not Found',
@@ -60,7 +60,6 @@ class Github extends Component {
         return commits;
       })
       .then(res => {
-        console.log(res)
         this.setState({ commits:res })
       })
     }

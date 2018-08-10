@@ -38,14 +38,14 @@ class BitBucket extends Component {
       const username = sessionStorage.getItem('username-bit');
       const password = sessionStorage.getItem('password-bit')
       const repoName = this.props.relatedToShow.bitRepoName;
-       if(!this.props.relatedToShow) {
-        this.setState({commits: [
+       if(this.props.relatedToShow && this.props.relatedToShow.bitCommits.length === 0) {
+        return this.setState({commits: [
           {
             id: 0,
             author: 'Not Found',
             message: "Not Found",
             sha: 0,
-            avatar: ''
+            avatar: undefined
           }
         ]})
       }
