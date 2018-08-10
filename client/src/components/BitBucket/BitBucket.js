@@ -30,63 +30,6 @@ class BitBucket extends Component {
     this.filterTask = this.filterTask.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // if connection bettween task and commit not exsist
-    if (!this.props.filterTask) {
-      return
-    }
-    console.log('pracuje')
-    if (this.state.new) {
-      this.filterTask(this.props.filterTask);
-    }
-    // preventing from crash
-    if (this.props.filterTask._id === this.props.filterTask._id) {
-      return
-    }
-  }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //  // console.log(nextProps.filterTask.bitCommits[0])
-  //  if (this.state.commits.length > 0) {
-  //   console.log('con1')
-
-  //   // console.log(this.state.commits[0].sha)
-  //   // console.log(prevProps.filterTask.bitCommits[0]);
-
-  //   if (this.state.commits[0].sha === nextProps.filterTask.bitCommits[0]) {
-  //     console.log('con2')
-  //     return false
-  //   }
-    
-  //   return false
- 
-  // }
-  //   return true;
-  // }
-
-  filterTask(arg) {
-      axios.post('/api/bitbucket/filter', {
-        username: sessionStorage.getItem('username'),
-        password: sessionStorage.getItem('password'),
-        repoName: arg.bitRepoName
-      })
-      .then(res => {
-        const filterArr = filterArray(arg.bitCommits, res.data);
-             
-        const arr = filterArr.map(commit => {
-          const date = {}
-          date.author = commit.author.raw
-          date.sha = commit.hash;
-          date.message = commit.message;
-          date.taskID = this.randomNum()
-                  
-        return date;
-      })
-      this.setState({ commits: arr, repositores: arg.bitRepoName, new: false })
-    })
-    .catch(e => console.log(e));
-  }
-
   fetchCommits(repo) {
     // set repository name in <Main /> state
     this.props.handleRepoName(repo.name, 'bitRepoName');

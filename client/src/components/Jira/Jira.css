@@ -40,18 +40,8 @@
   display: none;
 }
 
-.worklog__btn {
-  background: #1B9CFC;
+.worklog-btn {
   position: absolute;
-  bottom: -1px;
-  right: -1px;
-  border: 1px solid #000;
-  border-bottom-right-radius: 3px;
-  border-top-left-radius: 3px;
-  transition: .3s ease;
-}
-
-.worklog__btn:hover {
-  background: #3B3B98;
-  color: #fff;
+  bottom: 5px;
+  right: 5px;
 }

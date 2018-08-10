@@ -9,8 +9,7 @@ const bitbucket = require('./api/bitbucket/bitbucket');
 const jira = require('./api/jira/jira');
 const mail = require('./api/mail/mail');
 const github = require('./api/github/github');
-
-
+const slack = require('./api/slack/slack');
 
 // middleware
 app.use(cors());
@@ -25,7 +24,8 @@ app.get('/', (req, res) => {
 app.use('/api/bitbucket/', bitbucket);
 app.use('/api/jira', jira);
 app.use('/api/mail', mail);
-app.use('/api/github', github)
+app.use('/api/github', github);
+app.use('/api/slack', slack)
 
 app.use('/api/db', db);
 

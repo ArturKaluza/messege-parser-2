@@ -8,7 +8,7 @@ import Github from '../components/Github/Github';
 import BitBucket from '../components/BitBucket/BitBucket';
 import Jira from '../components/Jira/Jira';
 import Mail from '../components/Mail/Mail';
-import Axios from '../../node_modules/axios';
+import axios from 'axios';
 
 
 class Main extends Component {
@@ -32,19 +32,24 @@ class Main extends Component {
       messages: [],
       channelID: undefined,
 
-      filterTask: {}
+      isBindMode: false,
+      relatedToShow: {}
     };
 
-    this.filterJiraTask = this.filterJiraTask.bind(this);
     this.getCommits = this.getCommits.bind(this);
     this.getRepoName = this.getRepoName.bind(this);
     this.stateToDB = this.stateToDB.bind(this);
     this.showTaskConnection = this.showTaskConnection.bind(this);
     this.filterBitCommit = this.filterBitCommit.bind(this)
   }
-
-  filterJiraTask(taskID, author, comment) {
-    this.setState({jiraTaskID: taskID, author: author, jiraComment: comment});
+  
+  showRelatedItems = (jiraTaskId, e) => {
+    this.setState({jiraTaskID: undefined, author: undefined, jiraComment: undefined, isBindMode: false})
+    this.getRelatedFromDb(jiraTaskId)
+  }
+  bindingItems = (taskID, author, comment, event) => {
+    event.stopPropagation();
+    this.setState({jiraTaskID: taskID, author: author, jiraComment: comment, isBindMode: true});
   }
 
   getRepoName(name, nameTool) {
@@ -78,10 +83,17 @@ class Main extends Component {
     this.setState({ channelID });
   }
 
-
+  getRelatedFromDb (jiraTaskID) {
+    
+    axios.get('/api/db', {params: { jiraTaskID }})
+    .then(res => {
+      this.setState({ relatedToShow: res.data })
+    })
+  }
 
   stateToDB() {
-    Axios.post('/api/db', {
+    
+    axios.post('/api/db', {
       author: this.state.author, 
       title: this.state.jiraComment, 
       jiraid: this.state.jiraTaskID,
@@ -107,9 +119,9 @@ class Main extends Component {
           jiraTaskID: undefined,
           jiraComment: undefined,
           bitCommits: [], 
-          bitRepoName: undefined,
+          
           githubCommits: [],
-          githubRepoName: undefined,
+          
           mailsToDb: [],
           mailName: undefined,
           messages: [],
@@ -147,9 +159,9 @@ class Main extends Component {
             
             <Grid.Column className="tool-container">
               <Jira 
-                jiraTask={this.filterJiraTask} 
+                bindingItems={this.bindingItems} 
                 activeTask={this.state.jiraTaskID}
-                showTaskConnection={this.showTaskConnection}
+                showRelatedItems={this.showRelatedItems}
               />
             </Grid.Column>
 
@@ -168,6 +180,8 @@ class Main extends Component {
                 getCommit={this.getCommitsGithub} 
                 stateCommit={this.state.githubCommits} 
                 handleRepoName={this.getRepoName}
+                relatedToShow={this.state.relatedToShow}
+                isBindMode={this.state.isBindMode}
               />
             </Grid.Column>
 

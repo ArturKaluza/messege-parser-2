@@ -25,7 +25,7 @@ export default class LoadingPage extends Component {
     }
     return axios.get('https://slack.com/api/oauth.access?', config)
     .then(response => {
-      console.log(response)
+ 
       if(response.data.ok) {
         asyncLocalStorage.setItem('token', response.data.access_token)
         .then(() => this.props.history.push("/"))
