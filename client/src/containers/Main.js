@@ -125,7 +125,6 @@ class Main extends Component {
           channelID: undefined,
         });
       }
-      console.log(res.data)
     })
     .catch(e => console.log(e));
   }
@@ -160,7 +159,6 @@ class Main extends Component {
             
             <Grid.Column className="tool-container">
               <Github  
-                handleActiveTask={this.state.activeTask} 
                 getCommit={this.getCommitsGithub} 
                 stateCommit={this.state.githubCommits} 
                 handleRepoName={this.getRepoName}
@@ -171,7 +169,6 @@ class Main extends Component {
 
             <Grid.Column className="tool-container">
               <BitBucket  
-                handleActiveTask={this.state.activeTask} 
                 getBitCommit={this.getCommits} 
                 stateCommit={this.state.bitCommits} 
                 handleRepoName={this.getRepoName} 

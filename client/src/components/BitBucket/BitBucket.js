@@ -15,14 +15,12 @@ class BitBucket extends Component {
       repositores: [],
       commits: [],
       stateCommit: [],
-      activeTask: false,      
       isLoading: false,      
       err: false
 
     }
 
     this.fetchCommits = this.fetchCommits.bind(this);
-    this.randomNum = this.randomNum.bind(this);
     this.getRepository = this.getRepository.bind(this);
     this.renderRepositores = this.renderRepositores.bind(this);
     this.renderForm = this.renderForm.bind(this);
@@ -30,10 +28,11 @@ class BitBucket extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.handleActiveTask, stateCommit: newProps.stateCommit})
+    this.setState({stateCommit: newProps.stateCommit})
   }
 
   componentDidUpdate(prevProps) {
+    console.log(this.props)
     if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
       const username = sessionStorage.getItem('username-bit');
       const password = sessionStorage.getItem('password-bit')
@@ -45,7 +44,7 @@ class BitBucket extends Component {
             author: 'Not Found',
             message: "Not Found",
             sha: 0,
-            avatar: undefined
+            avatar: ''
           }
         ]})
       }
@@ -56,7 +55,6 @@ class BitBucket extends Component {
             id: commit.hash,
             author: commit.author,
             message: commit.message,
-            taskID: Math.floor(Math.random() * 3) + 1,
             sha: commit.hash,
             avatar: commit.avatar
           }  
@@ -86,8 +84,7 @@ class BitBucket extends Component {
           date.author = commit.author.raw
           date.sha = commit.hash;
           date.message = commit.message;
-          date.taskID = this.randomNum()
-                  
+                 
         return date;
         })
         this.setState({commits: arr, isLoading: false})
@@ -116,10 +113,6 @@ class BitBucket extends Component {
       
   }
  
-  randomNum() {
-    return Math.floor(Math.random() * 3) + 1;
-  }
-
   renderBitBucket() {
     return (
     <div style={{textAlign: 'center'}}> 
@@ -130,9 +123,7 @@ class BitBucket extends Component {
           author={item.author}
           id={item.sha}
           message={item.message}
-          activeTask ={this.state.activeTask}
           stateCommit={this.props.stateCommit}
-          taskID={item.taskID}
           addCommit={this.props.getBitCommit}
           />
         )}
