@@ -19,14 +19,11 @@ class Jira extends Component {
     this.checkActiveTask = this.checkActiveTask.bind(this);
     this.getWorklogList = this.getWorklogList.bind(this);
     this.renderLoginForm = this.renderLoginForm.bind(this);
+    
   }
   
   componentDidMount() {
     this.checkActiveTask();
-  }
-
-  componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.activeTask})
   }
 
   checkActiveTask() {

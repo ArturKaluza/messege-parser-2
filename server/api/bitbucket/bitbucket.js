@@ -44,7 +44,22 @@ router.post('/commit', (req, res) => {
   bitbucket.repositories
     .listCommits({ username: owner, repo_slug: repoName})
     .then(({data, header}) => res.send(data.values))
-    .catch(e => console.log(e))
+    .catch(e => res.status(400).send(e))
+})
+
+router.post('/filter', (req, res) => {
+  const { username, password, repoName } = req.body;
+ 
+  bitbucket.authenticate({
+    type: 'basic',
+    username: username,
+    password: password
+  })
+
+  bitbucket.repositories
+  .listCommits({ username, repo_slug: repoName})
+  .then(({data, header}) => res.send(data.values))
+  .catch(e => console.log(e))
 })
 
 module.exports = router;

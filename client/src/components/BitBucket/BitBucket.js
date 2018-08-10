@@ -16,8 +16,9 @@ class BitBucket extends Component {
       commits: [],
       stateCommit: [],
       isLoading: false,      
-      err: false
-
+      err: false,
+      filterTask: {},
+      new: true
     }
 
     this.fetchCommits = this.fetchCommits.bind(this);
@@ -142,8 +143,6 @@ class BitBucket extends Component {
     })
     .then(res => this.setState({repositores: res.data, commits: [], isLoading: false}))
     .catch(e => console.log(e));
-      
-    
   }
 
   renderRepositores() {
@@ -198,3 +197,14 @@ class BitBucket extends Component {
 }
 
 export default BitBucket;
+
+const filterArray = (arr1, arr2) => {
+  const finalArray = []
+
+  arr1.forEach(e1 => arr2.forEach(e2 => {
+    if (e1 === e2.hash) {
+      finalArray.push(e2)
+    }
+  }))
+return finalArray;
+}

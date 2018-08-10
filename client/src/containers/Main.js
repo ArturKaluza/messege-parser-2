@@ -39,6 +39,7 @@ class Main extends Component {
     this.getCommits = this.getCommits.bind(this);
     this.getRepoName = this.getRepoName.bind(this);
     this.stateToDB = this.stateToDB.bind(this);
+    this.filterBitCommit = this.filterBitCommit.bind(this)
   }
   
   showRelatedItems = (jiraTaskId, e) => {
@@ -90,6 +91,7 @@ class Main extends Component {
   }
 
   stateToDB() {
+    
     axios.post('/api/db', {
       author: this.state.author, 
       title: this.state.jiraComment, 
@@ -128,7 +130,12 @@ class Main extends Component {
     })
     .catch(e => console.log(e));
   }
-  
+
+
+  filterBitCommit(arg) {
+    this.setState({filterTask: arg})
+  }
+
   render() {
     return (
       <div>
@@ -174,6 +181,8 @@ class Main extends Component {
                 handleRepoName={this.getRepoName} 
                 relatedToShow={this.state.relatedToShow}
                 isBindMode={this.state.isBindMode}
+                filterTask={this.state.filterTask}
+
               />
             </Grid.Column>
 

@@ -20,7 +20,6 @@ router.post('/', (req, res) => {
     } else {
       res.status(404).end();
     }
-    
   })
   .catch(err => {
     res.status(400).send(err)})
@@ -28,17 +27,6 @@ router.post('/', (req, res) => {
 
 
 router.post('/:key', (req, res) => {
-  // fetch('https://supportdesk.almservices.pl/rest/api/2/project/', {
-  //   headers: {
-  //     "Authorization": 'Basic YXJ0dXIua2FsdXphOmFzZHp4YzEx',
-  //   }
-  // })
-  //   .then(data => data.json())
-  //   .then(datajosn => {
-  //     res.send(datajosn)
-  //   })
-  //   .catch(e => console.log(e));
-  
   const { key } = req.params;
   const { username, password } = req.body;
 
