@@ -55,3 +55,9 @@
   background: #3B3B98;
   color: #fff;
 }
+
+.worklog-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}

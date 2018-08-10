@@ -15,7 +15,12 @@ router.post('/', (req, res) => {
     }
   })
   .then(response => {
-    res.send(response)
+    if (response) {
+      res.status(200).end();
+    } else {
+      res.status(404).end();
+    }
+    
   })
   .catch(err => {
     res.status(400).send(err)})
@@ -28,7 +33,16 @@ router.post('/:key', (req, res) => {
 
   const hash = base64.encode(username + ':' + password);
 
-  fetch(`https://supportdesk.almservices.pl/rest/api/2/issue/${key}/worklog`, {
+  // fetch(`https://supportdesk.almservices.pl/rest/api/2/issue/${key}/worklog`, {
+  //   headers: {
+  //     "Authorization": 'Basic ' + hash                              
+  //   }
+  // }).then(data => data.json())
+  //   .then(datajson => res.send(datajson))
+  //   .catch(e => console.log(e))
+
+
+  fetch(`https://supportdesk.almservices.pl/rest/api/2/search?jql=project="almaca"`, {
     headers: {
       "Authorization": 'Basic ' + hash                              
     }
@@ -36,7 +50,6 @@ router.post('/:key', (req, res) => {
     .then(datajson => res.send(datajson))
     .catch(e => console.log(e))
 
-  
 });
 
 module.exports = router;

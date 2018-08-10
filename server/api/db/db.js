@@ -24,8 +24,13 @@ router.post('/', (req, res) => {
 
 // get all task
 router.get('/', (req, res) => {
-  Task.find()
-    .then(docs => res.send(docs))
+  let { jiraTaskID: jiraid } = req.query;
+  jiraid = parseInt(jiraid)
+
+  Task.findOne({ jiraid })
+    .then(docs => {
+      res.send(docs)
+    })
     .catch(e => res.status(400).send(e));
 })
 

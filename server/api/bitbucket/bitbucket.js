@@ -31,8 +31,8 @@ router.post('/', (req, res) => {
 
 // get commits from repositores
 router.post('/commit', (req, res) => {
-  const repoName = req.body.repo.name
-  const owner = req.body.repo.owner.username
+  const repoName = req.body.repoName || req.body.repo.name;
+  const owner = req.body.username || req.body.repo.owner.username;
   
 
   bitbucket.authenticate({

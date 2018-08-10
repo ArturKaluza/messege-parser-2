@@ -14,7 +14,7 @@ class BitBucket extends Component {
     this.state = {
       repositores: [],
       commits: [],
-      activeTask: false,      
+      stateCommit: [],
       isLoading: false,      
       err: false,
       filterTask: {},
@@ -22,77 +22,60 @@ class BitBucket extends Component {
     }
 
     this.fetchCommits = this.fetchCommits.bind(this);
-    this.randomNum = this.randomNum.bind(this);
     this.getRepository = this.getRepository.bind(this);
     this.renderRepositores = this.renderRepositores.bind(this);
     this.renderForm = this.renderForm.bind(this);
     this.backToRepo = this.backToRepo.bind(this);
-    this.filterTask = this.filterTask.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // if connection bettween task and commit not exsist
-    if (!this.props.filterTask) {
-      return
-    }
-    console.log('pracuje')
-    if (this.state.new) {
-      this.filterTask(this.props.filterTask);
-    }
-    // preventing from crash
-    if (this.props.filterTask._id === this.props.filterTask._id) {
-      return
-    }
+  componentWillReceiveProps(newProps) {
+    this.setState({stateCommit: newProps.stateCommit})
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //  // console.log(nextProps.filterTask.bitCommits[0])
-  //  if (this.state.commits.length > 0) {
-  //   console.log('con1')
-
-  //   // console.log(this.state.commits[0].sha)
-  //   // console.log(prevProps.filterTask.bitCommits[0]);
-
-  //   if (this.state.commits[0].sha === nextProps.filterTask.bitCommits[0]) {
-  //     console.log('con2')
-  //     return false
-  //   }
-    
-  //   return false
- 
-  // }
-  //   return true;
-  // }
-
-  filterTask(arg) {
-      axios.post('/api/bitbucket/filter', {
-        username: sessionStorage.getItem('username'),
-        password: sessionStorage.getItem('password'),
-        repoName: arg.bitRepoName
+  componentDidUpdate(prevProps) {
+    if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
+      const username = sessionStorage.getItem('username-bit');
+      const password = sessionStorage.getItem('password-bit')
+      const repoName = this.props.relatedToShow.bitRepoName;
+       if(this.props.relatedToShow && this.props.relatedToShow.bitCommits.length === 0) {
+        return this.setState({commits: [
+          {
+            id: 0,
+            author: 'Not Found',
+            message: "Not Found",
+            sha: 0,
+            avatar: ''
+          }
+        ]})
+      }
+       axios.post('/api/bitbucket/commit', {username, password, repoName})
+      .then(response => {
+        const commits = response.data.map(commit => {
+          return {
+            id: commit.hash,
+            author: commit.author,
+            message: commit.message,
+            sha: commit.hash,
+            avatar: commit.avatar
+          }  
+      
+        })
+        .filter(commit => {
+          return this.props.relatedToShow.bitCommits.includes(commit.id)
+        })
+        return commits;
       })
       .then(res => {
-        const filterArr = filterArray(arg.bitCommits, res.data);
-             
-        const arr = filterArr.map(commit => {
-          const date = {}
-          date.author = commit.author.raw
-          date.sha = commit.hash;
-          date.message = commit.message;
-          date.taskID = this.randomNum()
-                  
-        return date;
+        this.setState({ commits:res })
       })
-      this.setState({ commits: arr, repositores: arg.bitRepoName, new: false })
-    })
-    .catch(e => console.log(e));
+    }
   }
 
   fetchCommits(repo) {
-    // set repository name in <Main /> state
     this.props.handleRepoName(repo.name, 'bitRepoName');
 
     this.setState({isLoading: true});
-    const password = sessionStorage.getItem('password')
+    const password = sessionStorage.getItem('password-bit')
 
     axios.post('/api/bitbucket/commit', {repo, password})
       .then(response => {
@@ -101,8 +84,7 @@ class BitBucket extends Component {
           date.author = commit.author.raw
           date.sha = commit.hash;
           date.message = commit.message;
-          date.taskID = this.randomNum()
-                  
+                 
         return date;
         })
         this.setState({commits: arr, isLoading: false})
@@ -114,8 +96,8 @@ class BitBucket extends Component {
     this.setState({isLoading: true})
     const {username, password} = e.target;
     
-    sessionStorage.setItem('username', username.value);
-    sessionStorage.setItem('password', password.value);
+    sessionStorage.setItem('username-bit', username.value);
+    sessionStorage.setItem('password-bit', password.value);
 
     axios.post(`/api/bitbucket`, {
       username: username.value,
@@ -131,10 +113,6 @@ class BitBucket extends Component {
       
   }
  
-  randomNum() {
-    return Math.floor(Math.random() * 3) + 1;
-  }
-
   renderBitBucket() {
     return (
     <div style={{textAlign: 'center'}}> 
@@ -145,9 +123,7 @@ class BitBucket extends Component {
           author={item.author}
           id={item.sha}
           message={item.message}
-          activeTask ={this.state.activeTask}
           stateCommit={this.props.stateCommit}
-          taskID={item.taskID}
           addCommit={this.props.getBitCommit}
           />
         )}
@@ -161,8 +137,8 @@ class BitBucket extends Component {
     this.setState({isLoading: true})
 
     axios.post(`/api/bitbucket`, {
-      username: sessionStorage.getItem('username'),
-      password: sessionStorage.getItem('password')
+      username: sessionStorage.getItem('username-bit'),
+      password: sessionStorage.getItem('password-bit')
     })
     .then(res => this.setState({repositores: res.data, commits: [], isLoading: false}))
     .catch(e => console.log(e));
@@ -220,14 +196,3 @@ class BitBucket extends Component {
 }
 
 export default BitBucket;
-
-const filterArray = (arr1, arr2) => {
-  const finalArray = []
-
-  arr1.forEach(e1 => arr2.forEach(e2 => {
-    if (e1 === e2.hash) {
-      finalArray.push(e2)
-    }
-  }))
-return finalArray;
-}
