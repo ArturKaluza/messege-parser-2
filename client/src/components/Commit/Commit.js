@@ -21,4 +21,3 @@ const Commit = (props) => {
 }
 
 export default Commit;
-

@@ -107,6 +107,10 @@ class BitBucket extends Component {
     .then(res => this.setState({repositores: res.data, isLoading: false}))
     .catch(e => {
       this.setState({isLoading: false, err: true})
+
+      username.value = '';
+      password.value = '';
+
       setTimeout(() => {
         this.setState({err: false})
       }, 2500);
