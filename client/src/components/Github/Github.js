@@ -14,24 +14,20 @@ class Github extends Component {
     this.state = {
       repositores: [],
       commits: [],
-      activeTask: false,
       isLoading: false,
       err: false,
     }
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.handleActiveTask})
-  }
-
   componentDidUpdate(prevProps) {
+    console.log(this.props)
     if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
       const username = sessionStorage.getItem('username-github');
       const password = sessionStorage.getItem('password-github')
       const repoName = this.props.relatedToShow.gitRepoName;
-
-      if(!this.props.relatedToShow) {
-        this.setState({commits: [
+      
+      if(this.props.relatedToShow && this.props.relatedToShow.gitCommits.length === 0) {
+        return this.setState({commits: [
           {
             id: 0,
             author: 'Not Found',
@@ -49,7 +45,6 @@ class Github extends Component {
             id: commit.sha,
             author: commit.author,
             message: commit.message,
-            taskID: Math.floor(Math.random() * 3) + 1,
             sha: commit.sha,
             avatar: commit.avatar
           }  
@@ -60,7 +55,6 @@ class Github extends Component {
         return commits;
       })
       .then(res => {
-        console.log(res)
         this.setState({ commits:res })
       })
     }
@@ -78,7 +72,6 @@ class Github extends Component {
             id: commit.sha,
             author: commit.author,
             message: commit.message,
-            taskID: Math.floor(Math.random() * 3) + 1,
             sha: commit.sha,
             avatar: commit.avatar
           }  
@@ -99,8 +92,6 @@ class Github extends Component {
                 author={item.author}
                 id={item.id}
                 message={item.message}
-                activeTask ={this.state.activeTask}
-                taskID={item.taskID}
                 addCommit={this.props.getCommit}
                 stateCommit={this.props.stateCommit}
                 />
@@ -108,7 +99,7 @@ class Github extends Component {
             }
           )}
         </List>
-        {this.props.isBindMode && <button className='btn__back' onClick={() => this.backToRepo()}>Back</button> }
+        {<button className='btn__back' onClick={() => this.backToRepo()}>Back</button> }
       </Segment>
     )
   }

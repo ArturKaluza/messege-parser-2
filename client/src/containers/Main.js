@@ -156,17 +156,16 @@ class Main extends Component {
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <Slack 
+              {/* <Slack 
                 handleActiveTask={this.state.activeTask}
                 getMessages={this.getMessages} 
                 stateMessages={this.state.messages} 
                 handleChannelName={this.getChannelId}
-              />
+              /> */}
             </Grid.Column>
             
             <Grid.Column className="tool-container">
               <Github  
-                handleActiveTask={this.state.activeTask} 
                 getCommit={this.getCommitsGithub} 
                 stateCommit={this.state.githubCommits} 
                 handleRepoName={this.getRepoName}
@@ -177,11 +176,13 @@ class Main extends Component {
 
             <Grid.Column className="tool-container">
               <BitBucket  
-                handleActiveTask={this.state.activeTask} 
                 getBitCommit={this.getCommits} 
                 stateCommit={this.state.bitCommits} 
                 handleRepoName={this.getRepoName} 
+                relatedToShow={this.state.relatedToShow}
+                isBindMode={this.state.isBindMode}
                 filterTask={this.state.filterTask}
+
               />
             </Grid.Column>
 

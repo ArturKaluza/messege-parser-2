@@ -120,8 +120,6 @@ class Jira extends Component {
             showRelatedItems={this.props.showRelatedItems}
           />
         }
-      
-
       </div>
     )
   }  
