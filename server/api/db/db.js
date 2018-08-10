@@ -11,23 +11,44 @@ router.post('/', (req, res) => {
   if (!author && !title && !jiraid) {
     return res.status(400).json({error: 'author, title and jiraid require'})
   }
-  
-  const task = new Task({
-    author, title, jiraid, bitCommits, bitRepoName, gitRepoName, gitCommits, workspaceID,
-    channelID, messages, email, mailsID
-  })
-
-  task.save()
-    .then(doc => res.send(doc))
-    .catch(e => res.status(400).send(e))
-
+   
+        const task = new Task({
+          author, title, jiraid, bitCommits, bitRepoName, gitRepoName, gitCommits, workspaceID,
+          channelID, messages, email, mailsID
+        })
+      
+        task.save()
+          .then(doc => res.send(doc))
+          .catch(e => res.status(400).send(e))
 })
 
 // get all task
 router.get('/', (req, res) => {
-  Task.find()
-    .then(docs => res.send(docs))
+  let { jiraTaskID: jiraid } = req.query;
+  jiraid = parseInt(jiraid)
+
+  Task.findOne({ jiraid })
+    .then(docs => {
+      res.send(docs)
+    })
     .catch(e => res.status(400).send(e));
+})
+
+// get one item
+router.get('/:id', (req, res) => {
+  const { id } = req.params
+  console.log(id);
+
+  Task.find({jiraid: id})
+    .then(doc => {
+      if (!doc) {
+        res.status(404).json({error: 'Document not found'})
+      }
+
+      res.send(doc);
+    })
+    .catch(e => res.status(400).send(e))
+
 })
 
 module.exports = router;

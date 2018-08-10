@@ -3,6 +3,8 @@ import axios from 'axios';
 import './Jira.css';
 import { List, Segment, Form } from 'semantic-ui-react';
 import Err from '../Error/Error';
+import Worklog from '../Worklog/Worklog';
+
 
 
 class Jira extends Component {
@@ -19,16 +21,12 @@ class Jira extends Component {
 
     this.checkActiveTask = this.checkActiveTask.bind(this);
     this.getWorklogList = this.getWorklogList.bind(this);
-    this.renderWorklog = this.renderWorklog.bind(this);
     this.renderLoginForm = this.renderLoginForm.bind(this);
+    
   }
   
   componentDidMount() {
     this.checkActiveTask();
-  }
-
-  componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.activeTask})
   }
 
   checkActiveTask() {
@@ -61,31 +59,6 @@ class Jira extends Component {
     .catch(e => console.log(e));
 
     key.value = ''
-  }
-   
-  renderWorklog() {
-    return (
-      <Segment color='violet'>
-      {this.state.projects.length === 0 ? false : <h3 className='user__title' >User name: {this.state.author}</h3>}
-      <List>
-        {this.state.projects.map((item, index) => <List.Item
-          className={this.state.activeTask === item.id ? 'Jira__item list-item list-item__active' : 'list-item Jira__item'}
-          key={index}
-          onClick={() => this.props.jiraTask(item.id, item.author, item.comment)}
-          > 
-        
-            <div>
-              {item.comment}
-            </div>
-            <div>
-              <p>id: {item.id}</p>
-            </div>
-        
-        </List.Item>
-        )}
-      </List>
-    </Segment>
-    )
   }
 
   loginJira(e) {
@@ -143,10 +116,23 @@ class Jira extends Component {
           </div>
           
         </div>
-        
+
         {this.state.projects.length === 0 ? false : this.renderWorklog()}
 
         {this.state.err ? <Err text={'Password incorrect'} /> : false}    
+
+
+        {this.state.projects.length === 0 ? 
+          false 
+          :
+          <Worklog
+            projects={this.state.projects}
+            author={this.state.author}
+            activeTask={this.state.activeTask}
+            bindingItems={this.props.bindingItems}
+            showRelatedItems={this.props.showRelatedItems}
+          />
+        }
 
       </div>
     )
