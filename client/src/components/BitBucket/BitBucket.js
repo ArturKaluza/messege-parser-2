@@ -201,14 +201,3 @@ class BitBucket extends Component {
 }
 
 export default BitBucket;
-
-const filterArray = (arr1, arr2) => {
-  const finalArray = []
-
-  arr1.forEach(e1 => arr2.forEach(e2 => {
-    if (e1 === e2.hash) {
-      finalArray.push(e2)
-    }
-  }))
-return finalArray;
-}

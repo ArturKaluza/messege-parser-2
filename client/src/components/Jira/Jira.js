@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './Jira.css';
-import { List, Segment, Form } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import Err from '../Error/Error';
 import Worklog from '../Worklog/Worklog';
 

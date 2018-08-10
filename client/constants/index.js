@@ -1,0 +1,1 @@
+export const TYP_AKCJI = "TYP_AKCJI";
