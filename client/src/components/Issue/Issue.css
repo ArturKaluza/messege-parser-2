@@ -1,0 +1,16 @@
+.issue {
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #000;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  transition: .3s;
+}
+
+.issue:hover {
+  background: skyblue;
+}
+
+.active {
+  background: skyblue;
+}

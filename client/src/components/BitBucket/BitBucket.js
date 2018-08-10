@@ -32,7 +32,6 @@ class BitBucket extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props)
     if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
       const username = sessionStorage.getItem('username-bit');
       const password = sessionStorage.getItem('password-bit')

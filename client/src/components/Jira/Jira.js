@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Jira.css';
 import { Form } from 'semantic-ui-react';
 import Worklog from '../Worklog/Worklog';
+import Issue from '../Issue/Issue';
 
 
 class Jira extends Component {
@@ -13,12 +14,14 @@ class Jira extends Component {
       projects: [],
       activeTask: false,
       author: '',
-      login: false
+      login: false,
+      issues: []
     }
 
     this.checkActiveTask = this.checkActiveTask.bind(this);
     this.getWorklogList = this.getWorklogList.bind(this);
     this.renderLoginForm = this.renderLoginForm.bind(this);
+    this.setIssue = this.setIssue.bind(this);
   }
   
   componentDidMount() {
@@ -43,17 +46,29 @@ class Jira extends Component {
       password: sessionStorage.getItem('jiraPassword')
     })
       .then(res => {
-        this.setState({author: res.data.worklogs[0].author.name})
-        const projectArray = res.data.worklogs.map((item, index) => {
-          let obj = {}
-          obj.author = item.author.name
-          obj.comment = item.comment;
-          obj.id = item.id;
+        console.log(res.data.issues)
+        const issues = res.data.issues.map((item, index) => {
+          let obj = {};
 
+          obj.key = item.key;
+          obj.id = item.id;
           return obj;
         })
+
+        this.setState({ issues })
+
+        // Old functionality
+        // this.setState({author: res.data.worklogs[0].author.name})
+        // const projectArray = res.data.worklogs.map((item, index) => {
+        //   let obj = {}
+        //   obj.author = item.author.name
+        //   obj.comment = item.comment;
+        //   obj.id = item.id;
+
+        //   return obj;
+        // })
      
-        this.setState({projects: projectArray})
+        // this.setState({projects: projectArray})
      
     })
     .catch(e => console.log(e));
@@ -93,6 +108,12 @@ class Jira extends Component {
     )
   }
 
+  setIssue(id) {
+    console.log('work');
+    console.log(id);
+    this.setState({activeTask: id})
+  }
+
   render() {
     return (
       <div className='Jira'>
@@ -112,7 +133,7 @@ class Jira extends Component {
           
         </div>
         
-        {this.state.projects.length === 0 ? 
+        {/* {this.state.projects.length === 0 ? 
           false 
           :
           <Worklog
@@ -122,6 +143,17 @@ class Jira extends Component {
             bindingItems={this.props.bindingItems}
             showRelatedItems={this.props.showRelatedItems}
           />
+        } */}
+
+          { this.state.issues.length === 0 ? false : this.state.issues.map((item, index) => <Issue
+            key={index}
+            itemKey={item.key}
+            id={item.id}
+            activeTask={this.state.activeTask}
+            setIssue={this.setIssue}
+            
+            />
+          )
         }
       </div>
     )
