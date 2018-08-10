@@ -39,7 +39,6 @@ class Main extends Component {
     this.getCommits = this.getCommits.bind(this);
     this.getRepoName = this.getRepoName.bind(this);
     this.stateToDB = this.stateToDB.bind(this);
-    this.showTaskConnection = this.showTaskConnection.bind(this);
     this.filterBitCommit = this.filterBitCommit.bind(this)
   }
   
@@ -92,6 +91,7 @@ class Main extends Component {
   }
 
   stateToDB() {
+    
     axios.post('/api/db', {
       author: this.state.author, 
       title: this.state.jiraComment, 
@@ -148,7 +148,6 @@ class Main extends Component {
   render() {
     return (
       <div>
-
          <div className='title'>
             <h1>Message-Parse-App </h1>
             <Button content='Add Connection' primary onClick={this.stateToDB} disabled={!this.state.author && !this.state.jiraComment && !this.state.jiraTaskID} />

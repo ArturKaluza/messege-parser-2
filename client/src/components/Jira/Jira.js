@@ -6,6 +6,7 @@ import Worklog from '../Worklog/Worklog';
 import Issue from '../Issue/Issue';
 
 
+
 class Jira extends Component {
   constructor(props) {
     super(props);
@@ -26,10 +27,6 @@ class Jira extends Component {
   
   componentDidMount() {
     this.checkActiveTask();
-  }
-
-  componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.activeTask})
   }
 
   checkActiveTask() {
@@ -116,7 +113,12 @@ class Jira extends Component {
         this.setState({login: true});
       }
     })
-    .catch(e => console.log(e)); 
+    .catch(e => {
+      this.setState({err: true})
+      setTimeout(() => {
+        this.setState({err: false})
+      }, 2500);      
+    }); 
   }
 
   renderLoginForm() {
@@ -181,6 +183,7 @@ class Jira extends Component {
             />
           )
         }
+
       </div>
     )
   }  
