@@ -29,10 +29,6 @@ class BitBucket extends Component {
     this.backToRepo = this.backToRepo.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({activeTask: newProps.handleActiveTask, stateCommit: newProps.stateCommit})
-  }
-
   fetchCommits(repo) {
     // set repository name in <Main /> state
     this.props.handleRepoName(repo.name, 'bitRepoName');

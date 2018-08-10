@@ -90,6 +90,7 @@ class Main extends Component {
   }
 
   stateToDB() {
+    
     axios.post('/api/db', {
       author: this.state.author, 
       title: this.state.jiraComment, 
