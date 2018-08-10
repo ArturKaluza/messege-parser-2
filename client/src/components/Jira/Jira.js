@@ -19,6 +19,7 @@ class Jira extends Component {
     this.checkActiveTask = this.checkActiveTask.bind(this);
     this.getWorklogList = this.getWorklogList.bind(this);
     this.renderLoginForm = this.renderLoginForm.bind(this);
+    
   }
   
   componentDidMount() {
@@ -69,7 +70,6 @@ class Jira extends Component {
         sessionStorage.setItem('jiraUserName', username.value);
         sessionStorage.setItem('jiraPassword', password.value);
         this.setState({login: true});
-        console.log('login');
       }
     })
     .catch(e => console.log(e)); 

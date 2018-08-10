@@ -39,6 +39,8 @@ class Main extends Component {
     this.getCommits = this.getCommits.bind(this);
     this.getRepoName = this.getRepoName.bind(this);
     this.stateToDB = this.stateToDB.bind(this);
+    this.showTaskConnection = this.showTaskConnection.bind(this);
+    this.filterBitCommit = this.filterBitCommit.bind(this)
   }
   
   showRelatedItems = (jiraTaskId, e) => {
@@ -126,11 +128,24 @@ class Main extends Component {
           channelID: undefined,
         });
       }
-      console.log(res.data)
     })
     .catch(e => console.log(e));
   }
   
+  showTaskConnection(e, id) {
+    e.stopPropagation()
+    
+    Axios.get(`/api/db/${id}`)
+      .then(res => {
+        this.filterBitCommit(res.data[0])
+      })
+      .catch(e => console.log(e))
+  }
+
+  filterBitCommit(arg) {
+    this.setState({filterTask: arg})
+  }
+
   render() {
     return (
       <div>
@@ -151,12 +166,12 @@ class Main extends Component {
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <Slack 
+              {/* <Slack 
                 handleActiveTask={this.state.activeTask}
                 getMessages={this.getMessages} 
                 stateMessages={this.state.messages} 
                 handleChannelName={this.getChannelId}
-              />
+              /> */}
             </Grid.Column>
             
             <Grid.Column className="tool-container">
@@ -176,6 +191,7 @@ class Main extends Component {
                 getBitCommit={this.getCommits} 
                 stateCommit={this.state.bitCommits} 
                 handleRepoName={this.getRepoName} 
+                filterTask={this.state.filterTask}
               />
             </Grid.Column>
 
