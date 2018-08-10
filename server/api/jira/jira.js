@@ -20,10 +20,7 @@ router.post('/', (req, res) => {
     } else {
       res.status(404).end();
     }
-<<<<<<< HEAD
     
-=======
->>>>>>> 4e996d931a0641b8adb7f8496331caf15b29dcfe
   })
   .catch(err => {
     res.status(400).send(err)})
