@@ -150,12 +150,12 @@ class Main extends Component {
             </Grid.Column>
 
             <Grid.Column className="tool-container">
-              <Slack 
+              {/* <Slack 
                 handleActiveTask={this.state.activeTask}
                 getMessages={this.getMessages} 
                 stateMessages={this.state.messages} 
                 handleChannelName={this.getChannelId}
-              />
+              /> */}
             </Grid.Column>
             
             <Grid.Column className="tool-container">
@@ -175,6 +175,8 @@ class Main extends Component {
                 getBitCommit={this.getCommits} 
                 stateCommit={this.state.bitCommits} 
                 handleRepoName={this.getRepoName} 
+                relatedToShow={this.state.relatedToShow}
+                isBindMode={this.state.isBindMode}
               />
             </Grid.Column>
 

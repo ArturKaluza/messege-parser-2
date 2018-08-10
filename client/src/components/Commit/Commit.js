@@ -9,7 +9,7 @@ const Commit = (props) => {
       <List.Item className={props.activeTask === props.taskID ? 'list-item__active' : 'list-item'}>
         <Image avatar src={props.avatar} size='mini' spaced />
         <List.Content>
-          <List.Header as='a'>{props.author} </List.Header>
+          <List.Header as='a'>{props.author.raw || props.author} </List.Header>
         </List.Content>
         <List.Description><b> Message commit: </b>{ props.message }</List.Description>
 

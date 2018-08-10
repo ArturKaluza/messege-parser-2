@@ -33,12 +33,51 @@ class BitBucket extends Component {
     this.setState({activeTask: newProps.handleActiveTask, stateCommit: newProps.stateCommit})
   }
 
+  componentDidUpdate(prevProps) {
+    if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
+      const username = sessionStorage.getItem('username-bit');
+      const password = sessionStorage.getItem('password-bit')
+      const repoName = this.props.relatedToShow.bitRepoName;
+       if(!this.props.relatedToShow) {
+        this.setState({commits: [
+          {
+            id: 0,
+            author: 'Not Found',
+            message: "Not Found",
+            sha: 0,
+            avatar: ''
+          }
+        ]})
+      }
+       axios.post('/api/bitbucket/commit', {username, password, repoName})
+      .then(response => {
+        const commits = response.data.map(commit => {
+          return {
+            id: commit.hash,
+            author: commit.author,
+            message: commit.message,
+            taskID: Math.floor(Math.random() * 3) + 1,
+            sha: commit.hash,
+            avatar: commit.avatar
+          }  
+      
+        })
+        .filter(commit => {
+          return this.props.relatedToShow.bitCommits.includes(commit.id)
+        })
+        return commits;
+      })
+      .then(res => {
+        this.setState({ commits:res })
+      })
+    }
+  }
+
   fetchCommits(repo) {
-    // set repository name in <Main /> state
     this.props.handleRepoName(repo.name, 'bitRepoName');
 
     this.setState({isLoading: true});
-    const password = sessionStorage.getItem('password')
+    const password = sessionStorage.getItem('password-bit')
 
     axios.post('/api/bitbucket/commit', {repo, password})
       .then(response => {
@@ -60,8 +99,8 @@ class BitBucket extends Component {
     this.setState({isLoading: true})
     const {username, password} = e.target;
     
-    sessionStorage.setItem('username', username.value);
-    sessionStorage.setItem('password', password.value);
+    sessionStorage.setItem('username-bit', username.value);
+    sessionStorage.setItem('password-bit', password.value);
 
     axios.post(`/api/bitbucket`, {
       username: username.value,
@@ -107,8 +146,8 @@ class BitBucket extends Component {
     this.setState({isLoading: true})
 
     axios.post(`/api/bitbucket`, {
-      username: sessionStorage.getItem('username'),
-      password: sessionStorage.getItem('password')
+      username: sessionStorage.getItem('username-bit'),
+      password: sessionStorage.getItem('password-bit')
     })
     .then(res => this.setState({repositores: res.data, commits: [], isLoading: false}))
     .catch(e => console.log(e));

@@ -108,7 +108,7 @@ class Github extends Component {
             }
           )}
         </List>
-        {this.props.isBindMode && <button className='btn__back' onClick={() => this.backToRepo()}>Back</button> }
+        {<button className='btn__back' onClick={() => this.backToRepo()}>Back</button> }
       </Segment>
     )
   }

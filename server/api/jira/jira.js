@@ -15,7 +15,12 @@ router.post('/', (req, res) => {
     }
   })
   .then(response => {
-    res.send(response.status)
+    if (response) {
+      res.status(200).end();
+    } else {
+      res.status(404).end();
+    }
+    
   })
   .catch(err => {
     res.status(400).send(err)})

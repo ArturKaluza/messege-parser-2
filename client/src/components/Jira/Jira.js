@@ -73,7 +73,6 @@ class Jira extends Component {
         sessionStorage.setItem('jiraUserName', username.value);
         sessionStorage.setItem('jiraPassword', password.value);
         this.setState({login: true});
-        console.log('login');
       }
     })
     .catch(e => console.log(e)); 
@@ -124,8 +123,6 @@ class Jira extends Component {
             showRelatedItems={this.props.showRelatedItems}
           />
         }
-      
-
       </div>
     )
   }  
