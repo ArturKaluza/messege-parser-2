@@ -27,7 +27,6 @@ class BitBucket extends Component {
     this.renderRepositores = this.renderRepositores.bind(this);
     this.renderForm = this.renderForm.bind(this);
     this.backToRepo = this.backToRepo.bind(this);
-    this.filterTask = this.filterTask.bind(this);
   }
 
   fetchCommits(repo) {
