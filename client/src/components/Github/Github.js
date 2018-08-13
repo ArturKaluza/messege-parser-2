@@ -13,7 +13,6 @@ import * as actions from '../../actions/github';
 class Github extends Component {
 
   // componentDidUpdate(prevProps) {
-  //   console.log(this.props)
   //   if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
   //     const username = sessionStorage.getItem('username-github');
   //     const password = sessionStorage.getItem('password-github')
@@ -85,6 +84,18 @@ class Github extends Component {
     const {username, password} = e.target;
     
     this.props.getRepositories(username.value, password.value)
+  }
+
+  notRelated() {
+    return this.setState({commits: [
+      {
+        id: 0,
+        author: 'Not Found',
+        message: "Not Found",
+        sha: 0,
+        avatar: ''
+      }
+    ]})
   }
 
   renderForm = () => {
