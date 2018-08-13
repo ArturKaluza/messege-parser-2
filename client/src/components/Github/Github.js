@@ -18,26 +18,18 @@ class Github extends Component {
       isLoading: false,
       err: false,
     }
+
+    this.notRelated = this.notRelated.bind(this);
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props)
     if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
       const username = sessionStorage.getItem('username-github');
       const password = sessionStorage.getItem('password-github')
       const repoName = this.props.relatedToShow.gitRepoName;
       
-      if(this.props.relatedToShow && this.props.relatedToShow.gitCommits.length === 0) {
-        return this.setState({commits: [
-          {
-            id: 0,
-            author: 'Not Found',
-            message: "Not Found",
-            sha: 0,
-            avatar: ''
-          }
-        ]})
-      }
+      //  if(!!this.props.relatedToShow && this.props.relatedToShow.gitCommits.length === 0) this.notRelated();
+     
 
       axios.post('/api/github/commit', {username, password, repoName})
       .then(response => {
@@ -58,7 +50,8 @@ class Github extends Component {
       .then(res => {
         this.setState({ commits:res })
       })
-    }
+      .catch( e => this.notRelated())
+    }    
   }
   fetchCommits = repoName => {
     this.props.handleRepoName(repoName, 'githubRepoName');
@@ -139,6 +132,18 @@ class Github extends Component {
     })
     .then(res => this.setState({repositores: res.data, commits: [], isLoading: false}))
     .catch(e => console.log(e));
+  }
+
+  notRelated() {
+    return this.setState({commits: [
+      {
+        id: 0,
+        author: 'Not Found',
+        message: "Not Found",
+        sha: 0,
+        avatar: ''
+      }
+    ]})
   }
 
   renderForm = () => {

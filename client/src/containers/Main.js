@@ -23,6 +23,7 @@ class Main extends Component {
       bitCommits: [],
       bitRepoName: undefined,
 
+      gitUserName: undefined,
       githubCommits: [],
       githubRepoName: undefined,
       
@@ -46,9 +47,10 @@ class Main extends Component {
     this.setState({jiraTaskID: undefined, author: undefined, jiraComment: undefined, isBindMode: false})
     this.getRelatedFromDb(jiraTaskId)
   }
-  bindingItems = (taskID, author, comment, event) => {
-    event.stopPropagation();
-    this.setState({jiraTaskID: taskID, author: author, jiraComment: comment, isBindMode: true});
+  
+  bindingItems = (taskID, author) => {
+    // e.stopPropagation();
+    this.setState({jiraTaskID: taskID, author: author, isBindMode: true});
   }
 
   getRepoName(name, nameTool) {
@@ -86,8 +88,12 @@ class Main extends Component {
     
     axios.get('/api/db', {params: { jiraTaskID }})
     .then(res => {
+      if (!res.data) {
+        return this.setState({relatedToShow: {}})
+      }
       this.setState({ relatedToShow: res.data })
     })
+    .catch(e => console.log(e))
   }
 
   stateToDB() {
@@ -100,6 +106,7 @@ class Main extends Component {
       bitCommits: this.state.bitCommits,
       bitRepoName: this.state.bitRepoName,
 
+      gitUserName: sessionStorage.getItem('username-github'),
       gitCommits: this.state.githubCommits,
       gitRepoName: this.state.githubRepoName,
 

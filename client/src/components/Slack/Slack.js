@@ -110,7 +110,6 @@ class Slack extends Component {
   }
 
   render() {
-    console.log(this.state)
     const { handleActiveTask, getMessages, stateMessages } = this.props;
     return (
       <Fragment>

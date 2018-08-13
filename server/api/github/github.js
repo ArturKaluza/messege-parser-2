@@ -25,6 +25,7 @@ router.post('/commit', (req, res) => {
   allCommitsFromRepo(username, password, repoName)
 
   .then(data => {
+    console.log(data)
     res.status(200).send(data)
   })
   .catch(() => res.status(404).end());

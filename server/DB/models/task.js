@@ -23,6 +23,7 @@ const taskSchema = new Schema({
   bitRepoName: { type: String },
 
   // GitHub
+  gitUserName: { type: String },
   gitRepoName: { type: String },
   gitCommits: {
     type: [],
