@@ -5,10 +5,11 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk'
 
-import rootReducer from './reducers/index'
+import rootReducer from './reducers'
 import './App.css';
 import Main from './containers/Main';
 import LoadingPage from './containers/LoadingPage/LoadingPage'
+import ConnectionsPage from './containers/ConnectionsPage/ConnectionsPage';
 import Nav from './containers/Nav/Nav';
 
 
@@ -32,6 +33,7 @@ class App extends Component {
               <div>
                 <Route exact path="/" component={Main} />
                 <Route path="/authorization" component={LoadingPage} />
+                <Route path="/connections" component={ConnectionsPage} />
               </div>
               </Grid.Column>
             </Grid>

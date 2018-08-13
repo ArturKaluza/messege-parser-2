@@ -5,7 +5,7 @@ import xor from 'lodash/xor';
 
 import Slack from '../components/Slack/Slack';
 import Github from '../components/Github/Github';
-import BitBucket from '../components/BitBucket/BitBucket';
+// import BitBucket from '../components/BitBucket/BitBucket';
 import Jira from '../components/Jira/Jira';
 import Mail from '../components/Mail/Mail';
 import axios from 'axios';

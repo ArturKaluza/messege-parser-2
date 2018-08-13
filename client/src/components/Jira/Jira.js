@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './Jira.css';
 import { Form, Segment, List } from 'semantic-ui-react';
-import Worklog from '../Worklog/Worklog';
 import Issue from '../Issue/Issue';
 
 

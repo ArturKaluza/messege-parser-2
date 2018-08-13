@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Segment, List, Form } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import './Github.css';
 import Loader from '../Loader/Loader'
 import Err from '../Error/Error';
@@ -8,84 +8,60 @@ import Err from '../Error/Error';
 import './Github.css';
 
 import Commit from '../Commit/Commit';
+import * as actions from '../../actions/github';
 
 class Github extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      repositores: [],
-      commits: [],
-      isLoading: false,
-      err: false,
-    }
-  }
 
-  componentDidUpdate(prevProps) {
-    console.log(this.props)
-    if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
-      const username = sessionStorage.getItem('username-github');
-      const password = sessionStorage.getItem('password-github')
-      const repoName = this.props.relatedToShow.gitRepoName;
+  // componentDidUpdate(prevProps) {
+  //   console.log(this.props)
+  //   if((this.props.isBindMode === false && this.props.isBindMode !== prevProps.isBindMode) || this.props.relatedToShow.jiraid !== prevProps.relatedToShow.jiraid) {
+  //     const username = sessionStorage.getItem('username-github');
+  //     const password = sessionStorage.getItem('password-github')
+  //     const repoName = this.props.relatedToShow.gitRepoName;
       
-      if(this.props.relatedToShow && this.props.relatedToShow.gitCommits.length === 0) {
-        return this.setState({commits: [
-          {
-            id: 0,
-            author: 'Not Found',
-            message: "Not Found",
-            sha: 0,
-            avatar: ''
-          }
-        ]})
-      }
+  //     if(this.props.relatedToShow && this.props.relatedToShow.gitCommits.length === 0) {
+  //       return this.setState({commits: [
+  //         {
+  //           id: 0,
+  //           author: 'Not Found',
+  //           message: "Not Found",
+  //           sha: 0,
+  //           avatar: ''
+  //         }
+  //       ]})
+  //     }
 
-      axios.post('/api/github/commit', {username, password, repoName})
-      .then(response => {
-        const commits = response.data.map(commit => {
-          return {
-            id: commit.sha,
-            author: commit.author,
-            message: commit.message,
-            sha: commit.sha,
-            avatar: commit.avatar
-          }  
-        })
-        .filter(commit => {
-          return this.props.relatedToShow.gitCommits.includes(commit.id)
-        })
-        return commits;
-      })
-      .then(res => {
-        this.setState({ commits:res })
-      })
-    }
-  }
+  //     axios.post('/api/github/commit', {username, password, repoName})
+  //     .then(response => {
+  //       const commits = response.data.map(commit => {
+  //         return {
+  //           id: commit.sha,
+  //           author: commit.author,
+  //           message: commit.message,
+  //           sha: commit.sha,
+  //           avatar: commit.avatar
+  //         }  
+  //       })
+  //       .filter(commit => {
+  //         return this.props.relatedToShow.gitCommits.includes(commit.id)
+  //       })
+  //       return commits;
+  //     })
+  //     .then(res => {
+  //       this.setState({ commits:res })
+  //     })
+  //   }
+  // }
   fetchCommits = repoName => {
     this.props.handleRepoName(repoName, 'githubRepoName');
-
-    const username = sessionStorage.getItem('username-github');
-    const password = sessionStorage.getItem('password-github')
-    
-    axios.post('/api/github/commit', {username, password, repoName})
-      .then(response => {
-        const commits = response.data.map(commit => {
-          return {
-            id: commit.sha,
-            author: commit.author,
-            message: commit.message,
-            sha: commit.sha,
-            avatar: commit.avatar
-          }  
-        })
-        this.setState({ commits })
-    });
+    this.props.getCommits(repoName);
   }
 
   renderCommits = () => {
     return (
       <Segment color='black' style={{textAlign: 'center'}}>
         <List>
-          {this.state.commits.map(item => {
+          {this.props.commits.map(item => {
             return (
               <Commit 
                 key={item.id}
@@ -100,45 +76,15 @@ class Github extends Component {
             }
           )}
         </List>
-        {<button className='btn__back' onClick={() => this.backToRepo()}>Back</button> }
+        {<button className='btn__back' onClick={() => this.props.displayRepositories()}>Back</button> }
       </Segment>
     )
   }
   getRepository = (e) => {
     e.preventDefault();
-    this.setState({isLoading: true})
     const {username, password} = e.target;
     
-    sessionStorage.setItem('username-github', username.value);
-    sessionStorage.setItem('password-github', password.value);
-
-    axios.post(`/api/github`, {
-      username: username.value,
-      password: password.value,
-    })
-    .then(res => {
-     
-      this.setState({repositores: res.data, isLoading: false}) }) 
-    .catch(e => {
-      this.setState({isLoading: false, err: true})
-      
-      username.value = '';
-      password.value = '';
-
-      setTimeout(() => {
-        this.setState({err: false})
-      }, 2500);
-    });
-  }
-
-  backToRepo = () => {
-    this.setState({isLoading: true})
-    axios.post(`/api/github`, {
-      username: sessionStorage.getItem('username-github'),
-      password: sessionStorage.getItem('password-github')
-    })
-    .then(res => this.setState({repositores: res.data, commits: [], isLoading: false}))
-    .catch(e => console.log(e));
+    this.props.getRepositories(username.value, password.value)
   }
 
   renderForm = () => {
@@ -168,31 +114,46 @@ class Github extends Component {
     }            
 
   render() {
-    const { commits, repositores, isLoading } = this.state;
+    console.log(this.props)
+    const { isLoading, err, repositories, commits } = this.props
     const { renderForm, renderCommits, renderRepositores } = this;
     return (
       <div>
         <div className='column__header'>
           <h2>Github</h2>
         </div>
-        {repositores.length === 0 && renderForm()}
+        {repositories.length === 0 && renderForm()}
         <Loader isLoading={isLoading} />
         {commits.length > 0 && renderCommits()}
-        {(commits.length === 0 && repositores.length > 0 ) &&
+        {(commits.length === 0 && repositories.length > 0 ) &&
           <Segment color='black'>
             <List>
-              {repositores.map(renderRepositores)}
+              {repositories.map(renderRepositores)}
             </List>  
           </Segment>  
         }
 
-        {this.state.err ? <Err text={'User nad password don\'t match'} /> : false}
+        {err ? <Err text={'User nad password don\'t match'} /> : false}
       </div>
     );
   };
 };
-
-export default Github;
+const mapStateToProps = (state) => {
+  return {
+    commits: state.github.commits,
+    repositories: state.github.repositories,
+    isLoading: state.github.isLoading,
+    err: state.github.err
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCommits: (repo) => dispatch(actions.getCommits(repo)),
+    displayRepositories: () => dispatch(actions.displayRepositories()),
+    getRepositories: (username, password) => dispatch(actions.getRepositories(username, password)) 
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Github);
 
 
  
