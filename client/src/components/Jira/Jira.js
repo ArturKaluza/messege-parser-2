@@ -136,8 +136,6 @@ class Jira extends Component {
   }
 
   setIssue(id) {
-    console.log('work');
-    console.log(id);
     this.setState({activeTask: id})
   }
 

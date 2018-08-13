@@ -22,7 +22,6 @@ export const getMails = (email, password, host) => {
       host
     })
     .then(res => {
-      console.log(res.data)
       dispatch(getMailsSuccess(res.data))
     })
     .catch(function (error) {

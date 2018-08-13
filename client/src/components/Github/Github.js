@@ -114,7 +114,6 @@ class Github extends Component {
     }            
 
   render() {
-    console.log(this.props)
     const { isLoading, err, repositories, commits } = this.props
     const { renderForm, renderCommits, renderRepositores } = this;
     return (

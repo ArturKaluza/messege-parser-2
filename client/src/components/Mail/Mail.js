@@ -30,7 +30,6 @@ class Mail extends Component {
 
   render() {
     const { mails } = this.props;
-    console.log(this.props)
     return (
       <Fragment>
         <div className='column__header'>

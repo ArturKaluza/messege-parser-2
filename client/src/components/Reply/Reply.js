@@ -6,7 +6,6 @@ export default ({ data }) => {
   return (
     <Fragment>
       { data.map(reply => {
-        console.log(reply)
         return (
           <List.Item style={{ paddingLeft: '20px' }}>
             <List.Icon name='github' size='large' verticalAlign='middle' />
