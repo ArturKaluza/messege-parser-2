@@ -18,7 +18,7 @@ class IssueDetail extends Component {
       gitCommits: [],
 
       messages: [],
-      repiles: [] 
+      replies: [] 
     }
 
     this.getConnectedItems = this.getConnectedItems.bind(this);
@@ -83,30 +83,34 @@ class IssueDetail extends Component {
       token: localStorage.getItem('token'),
       channel: this.state.data[0].channelID
     }
-       
-    axios.get('/api/slack/messages', config)
+
+    axios.post('/api/slack/messages', config)
       .then(res => {
-        console.log(res);
-        const users = this.state.users
-        const messages = res.data.messages;
-        const replies = res.data.replies
-        users.forEach(user => {
-          messages.forEach(message => {
-            if (user.id === message.user) {
-              message.userName = user.name
-            }
-          }) 
+        const messages = [];
+        const replies = [];
+        // filter messages
+        res.data.messages.forEach(message => {
+          this.state.data.forEach(dataMes => {
+            dataMes.messages.forEach(mes => {
+              if (mes === message.ts) {
+                messages.push(message)
+              }
+            })
+          })          
+        })
+        
+        // filter repiles
+        res.data.replies.forEach(message => {
+          this.state.data.forEach(dataMes => {
+            dataMes.messages.forEach(mes => {
+                if (mes === message.thread_ts) {
+                replies.push(message)
+              }
+            })
+          })          
         })
 
-        users.forEach(user => {
-          replies.forEach(reply => {
-            if (user.id === reply.user) {
-              reply.userName = user.name
-            }
-          }) 
-        })
-
-        this.setState({ messages, replies})
+        this.setState({messages, replies})       
     })
     .catch(e => console.log(e))
   }
@@ -144,7 +148,7 @@ class IssueDetail extends Component {
             
             <Grid.Column>
             <List divided relaxed>
-            { this.state.messages.map(message => {
+            { this.state.messages.map((message, index) => {
               let replies = []
               if(message.replies) {
                 replies = this.state.replies.filter(reply => {
@@ -160,7 +164,7 @@ class IssueDetail extends Component {
                     data={message}
                     replies={this.state.replies}
                   />
-                  { message.replies && <Reply data={replies}/> }
+                  { message.replies && <Reply data={replies} /> }
                 </Fragment>
               )
             })}

@@ -26,8 +26,9 @@ class Slack extends Component {
         channel
       }
     };
-    axios.get('api/slack/messages', config)
+    axios.get('/api/slack/messages', config)
     .then(res => {
+
       const users = this.state.users
       const messages = res.data.messages;
       const replies = res.data.replies
