@@ -85,12 +85,11 @@ class Main extends Component {
   }
 
   getRelatedFromDb (jiraTaskID) {
-    
     axios.get('/api/db', {params: { jiraTaskID }})
     .then(res => {
-      if (!res.data) {
-        return this.setState({relatedToShow: {}})
-      }
+      // if (!res.data) {
+      //   return this.setState({relatedToShow: {}})
+      // }
       this.setState({ relatedToShow: res.data })
     })
     .catch(e => console.log(e))

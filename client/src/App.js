@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Grid } from 'semantic-ui-react'
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
@@ -10,7 +10,7 @@ import './App.css';
 import Main from './containers/Main';
 import LoadingPage from './containers/LoadingPage/LoadingPage'
 import Nav from './containers/Nav/Nav';
-
+import IssueDetail from './components/IssueDetail/IssueDetail';
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -30,8 +30,11 @@ class App extends Component {
               </Grid.Column>
               <Grid.Column width={14}>
               <div>
-                <Route exact path="/" component={Main} />
-                <Route path="/authorization" component={LoadingPage} />
+                <Switch>
+                  <Route exact path="/" component={Main} />
+                  <Route path="/authorization" component={LoadingPage} />
+                  <Route path="/issue/:id" component={IssueDetail} />
+                </Switch>
               </div>
               </Grid.Column>
             </Grid>

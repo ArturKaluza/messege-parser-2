@@ -30,7 +30,7 @@ class Github extends Component {
       
       //  if(!!this.props.relatedToShow && this.props.relatedToShow.gitCommits.length === 0) this.notRelated();
      
-
+      
       axios.post('/api/github/commit', {username, password, repoName})
       .then(response => {
         const commits = response.data.map(commit => {
