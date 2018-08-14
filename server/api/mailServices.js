@@ -35,6 +35,7 @@ const getAllThemes = (email, password, host) => {
 
             return connection.search(searchCriteria, fetchOptions).then(function (results) {
                 const data = results.map(function (res) {
+                    const date = res.attributes.date;
                     const thread = res.parts.filter(function (part) {
                         return part.which === 'HEADER';
                     })[0].body.subject[0];
@@ -47,7 +48,7 @@ const getAllThemes = (email, password, host) => {
                         return part.which === 'HEADER';
                     })[0].body['message-id'][0]
 
-                    return { thread, from, messageId }
+                    return { thread, from, messageId, date }
                 });
                 return data;
             })
