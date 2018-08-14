@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {Grid, Divider} from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import axios from 'axios';
+import { resolve } from 'url';
 
 class IssueDetail extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class IssueDetail extends Component {
     }
 
     this.getConnectedItems = this.getConnectedItems.bind(this);
+    this.getItemFromGithub = this.getItemFromGithub.bind(this);
   }
   
   componentDidMount() {
@@ -22,16 +24,48 @@ class IssueDetail extends Component {
 
     axios.get(`/api/db/${this.props.location.state.id}`)
       .then(res => {
-        console.log(res.data)
-        this.setState({data: res.data})
+        this.setState({data: res.data}, () => {
+          this.getItemFromGithub()
+        })        
       })
       .catch(e => console.log(e))
+  }
+
+  getItemFromGithub() {
+    
+    const username = sessionStorage.getItem('username-github');
+    const password = sessionStorage.getItem('password-github');
+    let repoName = '';
+    
+    if (this.state.data.length > 0) {
+      console.log('work')
+      repoName = this.state.data[0].gitRepoName      
+    }
+
+   console.log('github');
+    // const repoName = 
+
+   
+   // axios.post('/api/github/commit', {username, password, repoName})
+
+
+  } 
+
+  getItemFromSlack() {
+
+  }
+
+  getItemFromMail() {
 
   }
 
   render() {
+   
     return (
       <div>
+        
+        <h2>Connections Details</h2>
+        
         <Grid columns={4} divided>
           <Grid.Row>
             
