@@ -26,9 +26,22 @@ router.get('/users', (req, res) => {
 
 router.get('/messages', (req, res) => {  
   const { token, channel } = req.query
+  
   getMessages(token,channel)
   .then(data => {
     res.send(data);
   })
 });
+
+router.post('/messages', (req, res) => {  
+  const { token, channel } = req.body
+  
+  console.log(token, channel);
+
+  getMessages(token,channel)
+  .then(data => {
+    res.send(data);
+  })
+});
+
 module.exports = router;

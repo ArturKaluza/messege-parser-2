@@ -7,7 +7,7 @@ export default ({ data }) => {
     <Fragment>
       { data.map(reply => {
         return (
-          <List.Item style={{ paddingLeft: '20px' }}>
+          <List.Item style={{ paddingLeft: '20px' }} >
             <List.Icon name='github' size='large' verticalAlign='middle' />
             <List.Content>
               <List.Header as='a'>

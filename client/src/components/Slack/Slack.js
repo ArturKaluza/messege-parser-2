@@ -19,6 +19,42 @@ class Slack extends Component {
     }
   }
 
+
+  getMessages(token, channel) {
+    const config = {
+      params: {
+        token,
+        channel
+      }
+    };
+    axios.get('/api/slack/messages', config)
+    .then(res => {
+
+      const users = this.state.users
+      const messages = res.data.messages;
+      const replies = res.data.replies
+      users.forEach(user => {
+        messages.forEach(message => {
+          if (user.id === message.user) {
+            message.userName = user.name
+          }
+        }) 
+      })
+
+      users.forEach(user => {
+        replies.forEach(reply => {
+          if (user.id === reply.user) {
+            reply.userName = user.name
+          }
+        }) 
+      })
+
+      this.setState({ messages, replies, isLoading: false })
+    })
+  }
+
+
+
   getUsers(token) {
     this.setState({ isLoading: true })
     
