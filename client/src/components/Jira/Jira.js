@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './Jira.css';
 import { Form, Segment, List } from 'semantic-ui-react';
-import Worklog from '../Worklog/Worklog';
 import Issue from '../Issue/Issue';
 
 
@@ -43,6 +42,7 @@ class Jira extends Component {
       password: sessionStorage.getItem('jiraPassword')
     })
       .then(res => {
+        console.log(res.data.issues)
         const issues = res.data.issues.map((item, index) => {
           let obj = {};
 
@@ -176,8 +176,7 @@ class Jira extends Component {
             id={item.id}
             activeTask={this.state.activeTask}
             setIssue={this.setIssue}
-            bindItem={this.props.bindingItems.bind(this, item.id, item.key)}
-            showRelatedItems={this.props.showRelatedItems}
+            
             />
           )
         }

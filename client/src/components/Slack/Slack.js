@@ -1,23 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { List, Segment, Button, Form } from 'semantic-ui-react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 
 import './Slack.css'
 import Loader from '../Loader/Loader'
 import SlackMessage from '../SlackMessage/SlackMessage';
 import Reply from '../Reply/Reply';
+import * as actions from '../../actions/slack'
 
 class Slack extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      messages: [],
-      replies: [],
+      channel: '',
       isLoading: false,
-      channels: [],
       users: []
     }
   }
+
 
   getMessages(token, channel) {
     const config = {
@@ -52,6 +53,8 @@ class Slack extends Component {
     })
   }
 
+
+
   getUsers(token) {
     this.setState({ isLoading: true })
     
@@ -67,29 +70,6 @@ class Slack extends Component {
     })
   }
 
-  getChannels(token) {
-    this.setState({ isLoading: true })
-
-    const config = {
-      params: {
-        token
-      }
-    }
-
-    return axios.get('api/slack/channels', config)
-    .then(response => {
-      const channels = response.data.map(channel => {
-        return {
-          key: channel.id,
-          value: channel.id,
-          text: channel.name
-        }
-      });
-
-      this.setState({ isLoading: false, channels })
-    })
-  }
-
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
@@ -98,15 +78,14 @@ class Slack extends Component {
     
     this.props.handleChannelName(channel);
 
-    return this.getUsers(token)
-    .then(this.getMessages(token, channel))
+    this.props.getMessages(token, channel)
   }
 
   componentDidMount() {
     const token = localStorage.getItem('token');
     
     if(token) {
-      this.getChannels(token)
+      this.props.getChannels(token)
     }
   }
 
@@ -119,10 +98,10 @@ class Slack extends Component {
           <a href="https://slack.com/oauth/authorize?client_id=405795262034.405661432179&scope=chat:write:user,channels:history,users:read,users.profile:read,channels:read">
             <Button primary>Add/Change workspace</Button>
           </a>
-          {this.state.channels.length !==0 &&
+          {this.props.channels.length !==0 &&
             (<Form onSubmit={this.handleSubmit} style={{marginTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
               <Form.Group>
-                <Form.Select placeholder="Select channel" defaultValue={0} options={this.state.channels} name='channel' value={this.state.channel} onChange={this.handleChange}/>
+                <Form.Select placeholder="Select channel" defaultValue={0} options={this.props.channels} name='channel' value={this.state.channel} onChange={this.handleChange}/>
                 <Form.Button content='Submit' />
               </Form.Group>
             </Form>)
@@ -131,10 +110,10 @@ class Slack extends Component {
         <Segment color='orange'>
           <Loader isLoading={this.state.isLoading} />
           <List divided relaxed>
-            { this.state.messages.map(message => {
+            { this.props.messages.map(message => {
               let replies = []
               if(message.replies) {
-                replies = this.state.replies.filter(reply => {
+                replies = this.props.replies.filter(reply => {
                   return message.replies.map(rep => {
                     return reply.ts === rep.ts
                   })
@@ -148,7 +127,7 @@ class Slack extends Component {
                     activeTask={handleActiveTask}
                     stateMessages={stateMessages}
                     addMessage={getMessages}
-                    replies={this.state.replies}
+                    replies={this.props.replies}
                   />
                   { message.replies && <Reply data={replies}/> }
                 </Fragment>
@@ -161,4 +140,21 @@ class Slack extends Component {
   }
 }
 
-export default Slack;
+const mapStateToProps = state => {
+  return {
+    channels: state.slack.channels,
+    users: state.slack.users,
+    messages: state.slack.messages,
+    replies: state.slack.replies
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getChannels: token => dispatch(actions.getChannels(token)),
+    getUsers: token => dispatch(actions.getUsers(token)),
+    getMessages: (token, channel) => dispatch(actions.getMessages(token, channel))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Slack);

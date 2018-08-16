@@ -9,6 +9,9 @@ export default ({ data , addMessage, stateMessages }) => {
         <List.Header as='a'>
             { data.userName|| ''}
         </List.Header>
+        <List.Header as='a'>
+            { data.userName|| ''}
+        </List.Header>
         <List.Description as='a'>
           { data.text }
         </List.Description>

@@ -5,10 +5,11 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk'
 
-import rootReducer from './reducers/index'
+import rootReducer from './reducers'
 import './App.css';
 import Main from './containers/Main';
 import LoadingPage from './containers/LoadingPage/LoadingPage'
+import ConnectionsPage from './containers/ConnectionsPage/ConnectionsPage';
 import Nav from './containers/Nav/Nav';
 import IssueDetail from './components/IssueDetail/IssueDetail';
 
@@ -30,10 +31,11 @@ class App extends Component {
               </Grid.Column>
               <Grid.Column width={14}>
               <div>
-                <Switch>
+                <Switch >
                   <Route exact path="/" component={Main} />
                   <Route path="/authorization" component={LoadingPage} />
-                  <Route path="/issue/:id" component={IssueDetail} />
+                  <Route path="/connections" component={ConnectionsPage} />
+                  <Route path='/issue/:id' component={IssueDetail} />
                 </Switch>
               </div>
               </Grid.Column>
